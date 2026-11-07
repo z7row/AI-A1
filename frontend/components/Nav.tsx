@@ -120,8 +120,9 @@ export function Nav() {
                     onClick={() => setOpen(false)}
                     className={cn(
                       "block rounded-btn px-3 py-2 text-[14px] text-ink-soft hover:bg-subtle hover:text-ink transition-colors",
-                      (l.href === "/" ? path === "/" : path.startsWith(l.href)) &&
-                        "text-ink bg-subtle",
+                      (l.href === "/"
+                        ? path === "/"
+                        : path.startsWith(l.href)) && "text-ink bg-subtle",
                     )}
                   >
                     {l.label}

@@ -227,30 +227,30 @@ Use the correct output template:
 
 ## Resource map
 
-| Role | File |
-|------|------|
-| Visual tells + alternatives | `references/anti_slop_patterns.md` |
-| Direction library | `references/visual_directions.md` |
-| Non-default layouts | `references/layout_patterns.md` |
-| Font/type decisions | `references/typography_guidance.md` |
-| Functional motion | `references/motion_rules.md` |
-| Pre-generation brief | `templates/design_brief_template.md` |
-| Token structure | `templates/design_tokens_template.json` |
-| Generation output shape | `templates/ui_generation_output.md` |
-| Review output shape | `templates/ui_review_output.md` |
-| Slop scoring | `rubrics/ai_slop_score.md` |
-| Distinctiveness scoring | `rubrics/distinctiveness_score.md` |
-| Readiness scoring | `rubrics/implementation_readiness_score.md` |
-| General review checklist | `checklists/ui_review_checklist.md` |
-| Landing page checklist | `checklists/landing_page_checklist.md` |
-| Dashboard checklist | `checklists/dashboard_checklist.md` |
-| Accessibility basics | `checklists/accessibility_basics.md` |
-| Landing contrast example | `examples/bad_to_good_landing.md` |
-| Dashboard contrast example | `examples/bad_to_good_dashboard.md` |
-| Native macOS utility example | `examples/native_macos_utility_example.md` |
-| Reusable task prompts | `examples/prompt_examples.md` |
-| Install to agents | `scripts/install_skill.py` |
-| UI slop heuristic lint | `scripts/ui_lint.py` |
+| Role                         | File                                        |
+| ---------------------------- | ------------------------------------------- |
+| Visual tells + alternatives  | `references/anti_slop_patterns.md`          |
+| Direction library            | `references/visual_directions.md`           |
+| Non-default layouts          | `references/layout_patterns.md`             |
+| Font/type decisions          | `references/typography_guidance.md`         |
+| Functional motion            | `references/motion_rules.md`                |
+| Pre-generation brief         | `templates/design_brief_template.md`        |
+| Token structure              | `templates/design_tokens_template.json`     |
+| Generation output shape      | `templates/ui_generation_output.md`         |
+| Review output shape          | `templates/ui_review_output.md`             |
+| Slop scoring                 | `rubrics/ai_slop_score.md`                  |
+| Distinctiveness scoring      | `rubrics/distinctiveness_score.md`          |
+| Readiness scoring            | `rubrics/implementation_readiness_score.md` |
+| General review checklist     | `checklists/ui_review_checklist.md`         |
+| Landing page checklist       | `checklists/landing_page_checklist.md`      |
+| Dashboard checklist          | `checklists/dashboard_checklist.md`         |
+| Accessibility basics         | `checklists/accessibility_basics.md`        |
+| Landing contrast example     | `examples/bad_to_good_landing.md`           |
+| Dashboard contrast example   | `examples/bad_to_good_dashboard.md`         |
+| Native macOS utility example | `examples/native_macos_utility_example.md`  |
+| Reusable task prompts        | `examples/prompt_examples.md`               |
+| Install to agents            | `scripts/install_skill.py`                  |
+| UI slop heuristic lint       | `scripts/ui_lint.py`                        |
 
 ## Utility scripts
 

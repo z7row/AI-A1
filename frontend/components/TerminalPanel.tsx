@@ -64,8 +64,7 @@ export function TerminalPanel({
       convertEol: true,
       cursorBlink: true,
       fontSize: 13,
-      fontFamily:
-        'JetBrains Mono, ui-monospace, "SF Mono", Menlo, monospace',
+      fontFamily: 'JetBrains Mono, ui-monospace, "SF Mono", Menlo, monospace',
       theme: {
         background: "#000000",
         foreground: "#f0f0f0",

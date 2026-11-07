@@ -86,10 +86,7 @@ export function DiffViewer({ diff }: { diff: string }) {
             }
 
             return (
-              <span
-                key={i}
-                style={{ color, background: bg, display: "block" }}
-              >
+              <span key={i} style={{ color, background: bg, display: "block" }}>
                 {line || "\u00A0"}
               </span>
             );

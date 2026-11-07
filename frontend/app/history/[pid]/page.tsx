@@ -75,7 +75,10 @@ export default function HistoryDetailPage() {
         <button className="btn btn-ghost" onClick={() => router.back()}>
           <ArrowLeft size={12} /> Back
         </button>
-        <p className="mt-6 font-mono text-[12px]" style={{ color: "var(--ao-red)" }}>
+        <p
+          className="mt-6 font-mono text-[12px]"
+          style={{ color: "var(--ao-red)" }}
+        >
           {error}
         </p>
       </div>
@@ -162,17 +165,13 @@ export default function HistoryDetailPage() {
             <dt className="text-(--secondary) uppercase tracking-[0.14em] text-[9px]">
               exit
             </dt>
-            <dd className="mt-0.5 text-(--primary)">
-              {m.exit_code ?? "—"}
-            </dd>
+            <dd className="mt-0.5 text-(--primary)">{m.exit_code ?? "—"}</dd>
           </div>
           <div>
             <dt className="text-(--secondary) uppercase tracking-[0.14em] text-[9px]">
               started
             </dt>
-            <dd className="mt-0.5 text-(--primary)">
-              {fmt(m.started_at)}
-            </dd>
+            <dd className="mt-0.5 text-(--primary)">{fmt(m.started_at)}</dd>
           </div>
         </dl>
       </header>
@@ -228,7 +227,7 @@ export default function HistoryDetailPage() {
           <ShowMore collapsedHeight={200}>
             <pre
               dir="ltr"
-              className="font-mono text-[11px] leading-[1.65] whitespace-pre-wrap break-words text-(--primary)"
+              className="font-mono text-[11px] leading-[1.65] whitespace-pre-wrap wrap-break-word text-(--primary)"
             >
               <code>{m.terminal}</code>
             </pre>

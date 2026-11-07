@@ -79,7 +79,7 @@ export function DetailsModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.18 }}
-          className="fixed inset-0 z-[100] grid place-items-center px-4"
+          className="fixed inset-0 z-100 grid place-items-center px-4"
           style={{ background: "rgba(0,0,0,0.65)" }}
           onClick={onClose}
         >
@@ -105,7 +105,7 @@ export function DetailsModal({
               </h2>
               <button
                 onClick={onClose}
-                className="grid place-items-center w-8 h-8 rounded-full hover:bg-white/[0.06]"
+                className="grid place-items-center w-8 h-8 rounded-full hover:bg-white/6"
                 aria-label="Close"
               >
                 <X size={14} />
@@ -123,8 +123,7 @@ export function DetailsModal({
                   onClick={() => setTab(t.id)}
                   className="font-mono text-[10.5px] uppercase tracking-[0.18em] px-3 py-2 whitespace-nowrap transition-colors"
                   style={{
-                    color:
-                      tab === t.id ? "var(--ao-red)" : "var(--secondary)",
+                    color: tab === t.id ? "var(--ao-red)" : "var(--secondary)",
                     borderBottom:
                       tab === t.id
                         ? "2px solid var(--ao-red)"
@@ -141,25 +140,37 @@ export function DetailsModal({
               {tab === "select" && (
                 <div className="space-y-6">
                   <div>
-                    <h3 className="font-display text-lg text-(--primary) mb-1">Select items to run</h3>
-                    <p className="text-[12px] text-(--secondary) mb-4">Uncheck anything you don't want to execute.</p>
+                    <h3 className="font-display text-lg text-(--primary) mb-1">
+                      Select items to run
+                    </h3>
+                    <p className="text-[12px] text-(--secondary) mb-4">
+                      Uncheck anything you don't want to execute.
+                    </p>
                   </div>
-                  
+
                   {parsed.commands.trim() && (
                     <div>
-                      <h4 className="font-mono text-[10px] uppercase text-(--secondary) mb-2 tracking-wider">Commands</h4>
+                      <h4 className="font-mono text-[10px] uppercase text-(--secondary) mb-2 tracking-wider">
+                        Commands
+                      </h4>
                       <ul className="space-y-2">
                         {parsed.commands.split("\n").map((line, i) => {
                           if (!line.trim()) return null;
                           return (
-                            <li key={`cmd-${i}`} className="flex items-start gap-3">
+                            <li
+                              key={`cmd-${i}`}
+                              className="flex items-start gap-3"
+                            >
                               <Checkbox
                                 id={`cmd-${i}`}
                                 checked={!deselectedItems.has(`cmd:${i}`)}
                                 onCheckedChange={() => toggleItem(`cmd:${i}`)}
                                 className="mt-0.5"
                               />
-                              <label htmlFor={`cmd-${i}`} className="text-[13px] font-mono text-(--primary) leading-relaxed cursor-pointer break-all">
+                              <label
+                                htmlFor={`cmd-${i}`}
+                                className="text-[13px] font-mono text-(--primary) leading-relaxed cursor-pointer break-all"
+                              >
                                 {line}
                               </label>
                             </li>
@@ -169,39 +180,96 @@ export function DetailsModal({
                     </div>
                   )}
 
-                  {(parsed.files.length > 0 || parsed.edits.length > 0 || parsed.patches.length > 0 || parsed.deletions.length > 0) && (
+                  {(parsed.files.length > 0 ||
+                    parsed.edits.length > 0 ||
+                    parsed.patches.length > 0 ||
+                    parsed.deletions.length > 0) && (
                     <div>
-                      <h4 className="font-mono text-[10px] uppercase text-(--secondary) mb-2 tracking-wider">Files & Changes</h4>
+                      <h4 className="font-mono text-[10px] uppercase text-(--secondary) mb-2 tracking-wider">
+                        Files & Changes
+                      </h4>
                       <ul className="space-y-2">
                         {parsed.files.map((f, i) => (
-                          <li key={`file-${i}`} className="flex items-center gap-3">
-                            <Checkbox id={`file-${i}`} checked={!deselectedItems.has(`file:${i}`)} onCheckedChange={() => toggleItem(`file:${i}`)} />
-                            <label htmlFor={`file-${i}`} className="text-[13px] font-mono text-(--primary) cursor-pointer flex-1 truncate">
-                              {f.path} <span className="text-[10px] text-(--a-green)">(new)</span>
+                          <li
+                            key={`file-${i}`}
+                            className="flex items-center gap-3"
+                          >
+                            <Checkbox
+                              id={`file-${i}`}
+                              checked={!deselectedItems.has(`file:${i}`)}
+                              onCheckedChange={() => toggleItem(`file:${i}`)}
+                            />
+                            <label
+                              htmlFor={`file-${i}`}
+                              className="text-[13px] font-mono text-(--primary) cursor-pointer flex-1 truncate"
+                            >
+                              {f.path}{" "}
+                              <span className="text-[10px] text-(--a-green)">
+                                (new)
+                              </span>
                             </label>
                           </li>
                         ))}
                         {parsed.edits.map((e, i) => (
-                          <li key={`edit-${i}`} className="flex items-center gap-3">
-                            <Checkbox id={`edit-${i}`} checked={!deselectedItems.has(`edit:${i}`)} onCheckedChange={() => toggleItem(`edit:${i}`)} />
-                            <label htmlFor={`edit-${i}`} className="text-[13px] font-mono text-(--primary) cursor-pointer flex-1 truncate">
-                              {e.path} <span className="text-[10px] text-(--a-blue)">(edit)</span>
+                          <li
+                            key={`edit-${i}`}
+                            className="flex items-center gap-3"
+                          >
+                            <Checkbox
+                              id={`edit-${i}`}
+                              checked={!deselectedItems.has(`edit:${i}`)}
+                              onCheckedChange={() => toggleItem(`edit:${i}`)}
+                            />
+                            <label
+                              htmlFor={`edit-${i}`}
+                              className="text-[13px] font-mono text-(--primary) cursor-pointer flex-1 truncate"
+                            >
+                              {e.path}{" "}
+                              <span className="text-[10px] text-(--a-blue)">
+                                (edit)
+                              </span>
                             </label>
                           </li>
                         ))}
                         {parsed.patches.map((p, i) => (
-                          <li key={`patch-${i}`} className="flex items-center gap-3">
-                            <Checkbox id={`patch-${i}`} checked={!deselectedItems.has(`patch:${i}`)} onCheckedChange={() => toggleItem(`patch:${i}`)} />
-                            <label htmlFor={`patch-${i}`} className="text-[13px] font-mono text-(--primary) cursor-pointer flex-1 truncate">
-                              {p.path} <span className="text-[10px] text-(--a-yellow)">(patch)</span>
+                          <li
+                            key={`patch-${i}`}
+                            className="flex items-center gap-3"
+                          >
+                            <Checkbox
+                              id={`patch-${i}`}
+                              checked={!deselectedItems.has(`patch:${i}`)}
+                              onCheckedChange={() => toggleItem(`patch:${i}`)}
+                            />
+                            <label
+                              htmlFor={`patch-${i}`}
+                              className="text-[13px] font-mono text-(--primary) cursor-pointer flex-1 truncate"
+                            >
+                              {p.path}{" "}
+                              <span className="text-[10px] text-(--a-yellow)">
+                                (patch)
+                              </span>
                             </label>
                           </li>
                         ))}
                         {parsed.deletions.map((d, i) => (
-                          <li key={`delete-${i}`} className="flex items-center gap-3">
-                            <Checkbox id={`delete-${i}`} checked={!deselectedItems.has(`delete:${i}`)} onCheckedChange={() => toggleItem(`delete:${i}`)} />
-                            <label htmlFor={`delete-${i}`} className="text-[13px] font-mono text-(--primary) cursor-pointer flex-1 truncate">
-                              {d} <span className="text-[10px] text-(--ao-red)">(delete)</span>
+                          <li
+                            key={`delete-${i}`}
+                            className="flex items-center gap-3"
+                          >
+                            <Checkbox
+                              id={`delete-${i}`}
+                              checked={!deselectedItems.has(`delete:${i}`)}
+                              onCheckedChange={() => toggleItem(`delete:${i}`)}
+                            />
+                            <label
+                              htmlFor={`delete-${i}`}
+                              className="text-[13px] font-mono text-(--primary) cursor-pointer flex-1 truncate"
+                            >
+                              {d}{" "}
+                              <span className="text-[10px] text-(--ao-red)">
+                                (delete)
+                              </span>
                             </label>
                           </li>
                         ))}
@@ -327,7 +395,5 @@ export function DetailsModal({
 }
 
 function Empty({ text }: { text: string }) {
-  return (
-    <p className="font-mono text-[11px] text-(--secondary)">— {text} —</p>
-  );
+  return <p className="font-mono text-[11px] text-(--secondary)">— {text} —</p>;
 }

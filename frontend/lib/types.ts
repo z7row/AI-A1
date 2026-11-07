@@ -35,12 +35,7 @@ export type ParsedResponse = {
 };
 
 export type ProcessStatus =
-  | "pending"
-  | "running"
-  | "done"
-  | "failed"
-  | "stopped"
-  | "killed";
+  "pending" | "running" | "done" | "failed" | "stopped" | "killed";
 
 export type ProcessInfo = {
   id: string;

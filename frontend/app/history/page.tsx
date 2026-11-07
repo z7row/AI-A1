@@ -116,10 +116,7 @@ export default function HistoryPage() {
                   className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3 py-4 items-center"
                   style={{ borderBottom: "1px solid var(--frost)" }}
                 >
-                  <Link
-                    href={`/history/${it.id}`}
-                    className="min-w-0 group"
-                  >
+                  <Link href={`/history/${it.id}`} className="min-w-0 group">
                     <div className="flex items-center gap-2">
                       <span
                         className="block w-1.5 h-1.5 rounded-full shrink-0"
@@ -152,10 +149,7 @@ export default function HistoryPage() {
                     <span className="font-mono text-[10px] text-(--secondary)">
                       {fmtTime(it.started_at)}
                     </span>
-                    <Link
-                      href={`/history/${it.id}`}
-                      className="btn btn-ghost"
-                    >
+                    <Link href={`/history/${it.id}`} className="btn btn-ghost">
                       <ArrowRight size={12} />
                     </Link>
                     <button

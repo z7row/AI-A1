@@ -2,9 +2,7 @@ import { getBackendCwd } from "./api";
 
 const CWD_KEY = "ao-cwd";
 
-export type QuickstartResult =
-  | { ok: true }
-  | { ok: false; error: string };
+export type QuickstartResult = { ok: true } | { ok: false; error: string };
 
 export async function quickstart(): Promise<QuickstartResult> {
   let text: string;

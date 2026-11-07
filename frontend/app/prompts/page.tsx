@@ -2,14 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import {
-  Check,
-  Copy,
-  RotateCcw,
-  Save,
-  Sparkles,
-  Trash2,
-} from "lucide-react";
+import { Check, Copy, RotateCcw, Save, Sparkles, Trash2 } from "lucide-react";
 import { useFirstPrompt, useCustomPrompt } from "@/lib/promptStore";
 import { fadeUp, staggerList } from "@/components/motion";
 
@@ -97,9 +90,9 @@ export default function PromptsPage() {
         </h1>
         <p className="mt-2 max-w-[70ch] text-[13px] leading-[1.6] text-(--secondary)">
           The <strong className="text-(--primary)">default</strong> comes from
-          the code and can never be lost. Your edits live in the browser and
-          are used wherever you copy a prompt. Load default to preview the
-          original, then Save &amp; activate to use your version.
+          the code and can never be lost. Your edits live in the browser and are
+          used wherever you copy a prompt. Load default to preview the original,
+          then Save &amp; activate to use your version.
         </p>
       </motion.header>
 
@@ -140,17 +133,13 @@ export default function PromptsPage() {
             className="inline-flex items-center gap-1.5 px-2.5 h-6 rounded-full font-mono text-[10px] uppercase tracking-[0.18em]"
             style={{
               border: "1px solid var(--frost)",
-              color: p.isCustom
-                ? "var(--a-green)"
-                : "var(--ao-text-secondary)",
+              color: p.isCustom ? "var(--a-green)" : "var(--ao-text-secondary)",
             }}
           >
             <span
               className="block w-1 h-1 rounded-full"
               style={{
-                background: p.isCustom
-                  ? "var(--a-green)"
-                  : "var(--secondary)",
+                background: p.isCustom ? "var(--a-green)" : "var(--secondary)",
               }}
             />
             {p.isCustom ? "using custom" : "using default"}
@@ -170,7 +159,7 @@ export default function PromptsPage() {
         <div className="flex flex-wrap items-center gap-2 pt-3">
           <button
             onClick={loadDefaultIntoEditor}
-            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[12.5px] font-medium text-(--primary) transition-colors hover:bg-white/[0.06]"
+            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[12.5px] font-medium text-(--primary) transition-colors hover:bg-white/6"
             style={{ border: "1px solid var(--frost)" }}
             title="Load the built-in default into the editor (saves nothing)"
           >
@@ -180,7 +169,7 @@ export default function PromptsPage() {
 
           <button
             onClick={copy}
-            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[12.5px] font-medium text-(--primary) transition-colors hover:bg-white/[0.06]"
+            className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full text-[12.5px] font-medium text-(--primary) transition-colors hover:bg-white/6"
             style={{ border: "1px solid var(--frost)" }}
           >
             {flash === "copied" ? <Check size={13} /> : <Copy size={13} />}
@@ -217,10 +206,7 @@ export default function PromptsPage() {
       </motion.div>
 
       {/* ── Editor ────────────────────────────── */}
-      <motion.div
-        variants={fadeUp}
-        className="flex-1 min-h-0 p-4 md:p-5"
-      >
+      <motion.div variants={fadeUp} className="flex-1 min-h-0 p-4 md:p-5">
         <textarea
           value={draft}
           onChange={(e) => setDraft(e.target.value)}

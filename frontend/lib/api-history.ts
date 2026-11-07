@@ -1,13 +1,8 @@
 // Extended API client for file-tree + history endpoints.
 
-import type {
-  FilesListing,
-  HistoryDetail,
-  HistoryMeta,
-} from "./types";
+import type { FilesListing, HistoryDetail, HistoryMeta } from "./types";
 
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:2030";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE ?? "http://localhost:2030";
 
 // ── file tree ────────────────────────────────────────────────
 export async function listFiles(path: string): Promise<FilesListing> {

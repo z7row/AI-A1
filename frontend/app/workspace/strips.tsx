@@ -45,8 +45,8 @@ export function StatusStrips({
               <ShieldAlert size={12} style={{ color: "var(--ao-red)" }} />
               <span className="text-(--primary)">
                 {pendingDangers.length} dangerous pattern
-                {pendingDangers.length > 1 ? "s" : ""} detected — accepting
-                will prompt confirmation
+                {pendingDangers.length > 1 ? "s" : ""} detected — accepting will
+                prompt confirmation
               </span>
             </div>
           </motion.div>
@@ -73,8 +73,11 @@ export function StatusStrips({
             >
               <Lock size={12} style={{ color: "var(--a-yellow)" }} />
               <span className="text-(--primary)">
-                <strong className="font-semibold">Sensitive files detected:</strong>{" "}
-                {sensitiveDangers.length} command(s) attempt to access .env or credentials (auto-run blocked)
+                <strong className="font-semibold">
+                  Sensitive files detected:
+                </strong>{" "}
+                {sensitiveDangers.length} command(s) attempt to access .env or
+                credentials (auto-run blocked)
               </span>
             </div>
           </motion.div>
@@ -128,8 +131,8 @@ export function StatusStrips({
                 <div className="min-w-0">
                   <strong className="font-semibold text-(--primary)">
                     {parsed.warnings.length} block
-                    {parsed.warnings.length === 1 ? "" : "s"} skipped — the
-                    rest will still run:
+                    {parsed.warnings.length === 1 ? "" : "s"} skipped — the rest
+                    will still run:
                   </strong>
                   <ul className="mt-1 space-y-0.5 text-(--secondary)">
                     {parsed.warnings.map((w, i) => (

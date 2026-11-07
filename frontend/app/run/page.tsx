@@ -44,7 +44,7 @@ function IconLink({
           inline-flex items-center justify-center w-9 h-9
           text-(--ao-text-primary)
           transition-colors duration-150
-          hover:bg-white/[0.05]
+          hover:bg-white/5
         "
         style={{ borderRadius: 9999, border: "1px solid var(--frost)" }}
       >
@@ -236,8 +236,7 @@ echo "ok!"`);
     } else if (tree) {
       treeHeader = "Project structure:\n\n" + tree + "\n\n";
       if (treeTruncated) {
-        treeHeader +=
-          `(listing truncated at ${treeCount} files — add more excludes in Settings → File tree excludes)\n\n`;
+        treeHeader += `(listing truncated at ${treeCount} files — add more excludes in Settings → File tree excludes)\n\n`;
       }
     }
   }
@@ -312,7 +311,7 @@ echo "ok!"`);
                 type="button"
                 onClick={() => setTreeReloadKey((k) => k + 1)}
                 disabled={!cwd || treeLoading}
-                className="inline-flex items-center justify-center w-9 h-9 transition-colors duration-150 hover:bg-white/[0.05]"
+                className="inline-flex items-center justify-center w-9 h-9 transition-colors duration-150 hover:bg-white/5"
                 style={{
                   borderRadius: 9999,
                   border: "1px solid var(--frost)",
@@ -439,7 +438,7 @@ echo "ok!"`);
               group w-full flex items-center gap-4
               px-3 md:px-4 h-12 text-left
               transition-colors duration-150
-              hover:bg-white/[0.03]
+              hover:bg-white/3
             "
             style={{
               borderRadius: 9999,

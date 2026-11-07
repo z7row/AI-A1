@@ -2,13 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  ArrowUpRight,
-  BookOpen,
-  Play,
-  ScanLine,
-  Terminal,
-} from "lucide-react";
+import { ArrowUpRight, BookOpen, Play, ScanLine, Terminal } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { QuickStartButton } from "@/components/QuickStartButton";
 import { fadeUp, staggerList } from "@/components/motion";
@@ -115,14 +109,14 @@ export default function LandingPage() {
           <div className="flex flex-wrap items-center gap-2">
             <Link
               href="/run"
-              className="inline-flex items-center justify-center h-11 px-5 rounded-full text-[13px] font-medium text-(--primary) transition-colors duration-150 hover:bg-white/[0.06]"
+              className="inline-flex items-center justify-center h-11 px-5 rounded-full text-[13px] font-medium text-(--primary) transition-colors duration-150 hover:bg-white/6"
               style={{ border: "1px solid var(--frost)" }}
             >
               Open runner
             </Link>
             <Link
               href="/explain"
-              className="inline-flex items-center gap-1.5 justify-center h-11 px-5 rounded-full text-[13px] font-medium text-(--primary) transition-colors duration-150 hover:bg-white/[0.06]"
+              className="inline-flex items-center gap-1.5 justify-center h-11 px-5 rounded-full text-[13px] font-medium text-(--primary) transition-colors duration-150 hover:bg-white/6"
               style={{ border: "1px solid var(--frost)" }}
             >
               <BookOpen size={14} />
@@ -152,9 +146,9 @@ export default function LandingPage() {
           variants={fadeUp}
           className="mt-6 max-w-[54ch] text-[15px] md:text-[16px] leading-[1.6] text-(--secondary)"
         >
-          Paste the AI&apos;s Markdown response. AO-AI shows the plan, the
-          setup commands, and every file it wants to write — then streams the
-          output live once you approve.
+          Paste the AI&apos;s Markdown response. AO-AI shows the plan, the setup
+          commands, and every file it wants to write — then streams the output
+          live once you approve.
         </motion.p>
 
         {/* ═══════════════ MOSAIC ═══════════════
@@ -311,7 +305,7 @@ export default function LandingPage() {
                   run locally
                 </p>
               </div>
-              <p className="text-[12px] leading-[1.5] text-(--secondary)">
+              <p className="text-[12px] leading-normal text-(--secondary)">
                 All commands execute on your machine. Files never leave it.
               </p>
             </div>

@@ -56,7 +56,10 @@ export default function ExcludesSettingsPage() {
       variants={staggerList(0.06, 0.08)}
       className="mx-auto w-full max-w-[900px] px-5 md:px-8 py-10 md:py-14"
     >
-      <motion.header variants={fadeUp} className="flex items-start justify-between gap-4">
+      <motion.header
+        variants={fadeUp}
+        className="flex items-start justify-between gap-4"
+      >
         <div className="min-w-0">
           <Link
             href="/settings"
@@ -78,8 +81,8 @@ export default function ExcludesSettingsPage() {
           </h1>
           <p className="mt-3 max-w-[64ch] text-[13.5px] leading-[1.6] text-(--secondary)">
             These names are skipped when building the flat file list that is
-            prepended to the prompt you copy from the Run page. Add folders
-            or files you don&apos;t want to clutter the AI&apos;s context.
+            prepended to the prompt you copy from the Run page. Add folders or
+            files you don&apos;t want to clutter the AI&apos;s context.
           </p>
         </div>
       </motion.header>

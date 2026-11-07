@@ -27,13 +27,7 @@ export const WHITELIST_PRESETS: { label: string; entries: string[] }[] = [
   },
   {
     label: "Git (read-only)",
-    entries: [
-      "git status",
-      "git log",
-      "git diff",
-      "git branch",
-      "git remote",
-    ],
+    entries: ["git status", "git log", "git diff", "git branch", "git remote"],
   },
   {
     label: "Version checks",
@@ -76,10 +70,7 @@ function stripQuoted(s: string): string {
   return s.replace(/"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'/g, "");
 }
 
-function isSimpleCommandWhitelisted(
-  cmd: string,
-  whitelist: string[],
-): boolean {
+function isSimpleCommandWhitelisted(cmd: string, whitelist: string[]): boolean {
   const trimmed = cmd.trim();
   if (!trimmed) return true;
 
@@ -126,10 +117,7 @@ function isSimpleCommandWhitelisted(
   return false;
 }
 
-export function isLineWhitelisted(
-  line: string,
-  whitelist: string[],
-): boolean {
+export function isLineWhitelisted(line: string, whitelist: string[]): boolean {
   const trimmed = line.trim();
   if (!trimmed) return true;
   if (trimmed.startsWith("#")) return true;

@@ -51,9 +51,9 @@ export default function WhitelistSettingsPage() {
           </h1>
           <p className="mt-3 max-w-[64ch] text-[13.5px] leading-[1.6] text-(--secondary)">
             Lines from the <code>## commands</code> block are checked one by
-            one. If <strong>every</strong> line matches an entry below, the
-            run starts immediately. If even one line is missing, you&apos;ll
-            be asked to approve the whole batch.
+            one. If <strong>every</strong> line matches an entry below, the run
+            starts immediately. If even one line is missing, you&apos;ll be
+            asked to approve the whole batch.
           </p>
         </div>
       </motion.header>
@@ -73,7 +73,7 @@ export default function WhitelistSettingsPage() {
           <p className="text-[13.5px] font-medium text-(--primary)">
             Whitelist enabled
           </p>
-          <p className="mt-1 text-[12px] leading-[1.5] text-(--secondary)">
+          <p className="mt-1 text-[12px] leading-normal text-(--secondary)">
             When off, every task asks for approval before running.
           </p>
         </div>
@@ -199,9 +199,8 @@ export default function WhitelistSettingsPage() {
           Add a command
         </h2>
         <p className="font-mono text-[10.5px] text-(--secondary) mb-3 leading-[1.7]">
-          Forms: <code>ls</code> (single token) ·{" "}
-          <code>git status</code> (multi-token, matches prefix) ·{" "}
-          <code>npm *</code> (prefix wildcard) ·{" "}
+          Forms: <code>ls</code> (single token) · <code>git status</code>{" "}
+          (multi-token, matches prefix) · <code>npm *</code> (prefix wildcard) ·{" "}
           <code>/^rsync\s/</code> (regex). Redirections like{" "}
           <code>echo x &gt; file</code> are allowed as long as the target is a
           relative path under cwd.

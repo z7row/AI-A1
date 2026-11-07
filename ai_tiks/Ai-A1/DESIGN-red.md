@@ -1,4 +1,5 @@
 # Redforge — Style Reference
+
 > dark obsidian grid with electric-red punctuation.
 
 ## Theme
@@ -26,24 +27,24 @@ The original reference uses a neutral-first editorial system with generous round
 
 # Tokens — Colors
 
-| Name | Value | Token | Role |
-|------|-------|-------|------|
-| Void | `#000000` | `--color-void` | Primary page canvas and deepest background |
-| Obsidian | `#080808` | `--color-obsidian` | Main dark surface and navigation background |
-| Carbon | `#101010` | `--color-carbon` | Cards, panels, and elevated sections |
-| Graphite | `#171717` | `--color-graphite` | Secondary dark surfaces |
-| Iron | `#262626` | `--color-iron` | Borders, dividers, inactive controls |
-| Steel | `#404040` | `--color-steel` | Icons and secondary structural elements |
-| Fog | `#737373` | `--color-fog` | Muted body copy and metadata |
-| Ash | `#A3A3A3` | `--color-ash` | Placeholder and tertiary text |
-| Silver | `#D4D4D4` | `--color-silver` | Secondary text on dark surfaces |
-| Snow | `#F5F5F5` | `--color-snow` | Primary text and high-contrast UI |
-| White | `#FFFFFF` | `--color-white` | Maximum-contrast text and icon surfaces |
-| Electric Red | `#FF1A1A` | `--color-red` | Primary brand accent, CTA, active state |
-| Bright Red | `#FF3333` | `--color-red-bright` | Hover state and visual emphasis |
-| Deep Red | `#B30000` | `--color-red-deep` | Pressed state and dark red surfaces |
-| Red Wash | `#2A0808` | `--color-red-wash` | Very subtle red-tinted panels |
-| Red Glow | `rgba(255, 26, 26, 0.22)` | `--color-red-glow` | Restricted glow for active/hero elements |
+| Name         | Value                     | Token                | Role                                        |
+| ------------ | ------------------------- | -------------------- | ------------------------------------------- |
+| Void         | `#000000`                 | `--color-void`       | Primary page canvas and deepest background  |
+| Obsidian     | `#080808`                 | `--color-obsidian`   | Main dark surface and navigation background |
+| Carbon       | `#101010`                 | `--color-carbon`     | Cards, panels, and elevated sections        |
+| Graphite     | `#171717`                 | `--color-graphite`   | Secondary dark surfaces                     |
+| Iron         | `#262626`                 | `--color-iron`       | Borders, dividers, inactive controls        |
+| Steel        | `#404040`                 | `--color-steel`      | Icons and secondary structural elements     |
+| Fog          | `#737373`                 | `--color-fog`        | Muted body copy and metadata                |
+| Ash          | `#A3A3A3`                 | `--color-ash`        | Placeholder and tertiary text               |
+| Silver       | `#D4D4D4`                 | `--color-silver`     | Secondary text on dark surfaces             |
+| Snow         | `#F5F5F5`                 | `--color-snow`       | Primary text and high-contrast UI           |
+| White        | `#FFFFFF`                 | `--color-white`      | Maximum-contrast text and icon surfaces     |
+| Electric Red | `#FF1A1A`                 | `--color-red`        | Primary brand accent, CTA, active state     |
+| Bright Red   | `#FF3333`                 | `--color-red-bright` | Hover state and visual emphasis             |
+| Deep Red     | `#B30000`                 | `--color-red-deep`   | Pressed state and dark red surfaces         |
+| Red Wash     | `#2A0808`                 | `--color-red-wash`   | Very subtle red-tinted panels               |
+| Red Glow     | `rgba(255, 26, 26, 0.22)` | `--color-red-glow`   | Restricted glow for active/hero elements    |
 
 ### Color Rules
 
@@ -77,18 +78,18 @@ Use a single geometric sans family throughout the product.
 
 ### Type Scale
 
-| Role | Weight | Size | Line Height | Token |
-|------|--------|------|-------------|-------|
-| caption | 400 | 12px | 1.5 | `--text-caption` |
-| meta | 400 | 13px | 1.5 | `--text-meta` |
-| body | 400 | 15px | 1.5 | `--text-body` |
-| body-lg | 400 | 18px | 1.5 | `--text-body-lg` |
-| subheading | 600 | 20px | 1.4 | `--text-subheading` |
-| heading-sm | 600 | 32px | 1.2 | `--text-heading-sm` |
-| heading | 600 | 40px | 1.15 | `--text-heading` |
-| heading-lg | 600 | 56px | 1.12 | `--text-heading-lg` |
-| display | 700 | 64px | 1.05 | `--text-display` |
-| display-xl | 700 | 72px | 1.02 | `--text-display-xl` |
+| Role       | Weight | Size | Line Height | Token               |
+| ---------- | ------ | ---- | ----------- | ------------------- |
+| caption    | 400    | 12px | 1.5         | `--text-caption`    |
+| meta       | 400    | 13px | 1.5         | `--text-meta`       |
+| body       | 400    | 15px | 1.5         | `--text-body`       |
+| body-lg    | 400    | 18px | 1.5         | `--text-body-lg`    |
+| subheading | 600    | 20px | 1.4         | `--text-subheading` |
+| heading-sm | 600    | 32px | 1.2         | `--text-heading-sm` |
+| heading    | 600    | 40px | 1.15        | `--text-heading`    |
+| heading-lg | 600    | 56px | 1.12        | `--text-heading-lg` |
+| display    | 700    | 64px | 1.05        | `--text-display`    |
+| display-xl | 700    | 72px | 1.02        | `--text-display-xl` |
 
 ---
 
@@ -100,34 +101,34 @@ Use a single geometric sans family throughout the product.
 
 ## Spacing Scale
 
-| Name | Value | Token |
-|------|-------|-------|
-| 4 | 4px | `--spacing-4` |
-| 8 | 8px | `--spacing-8` |
-| 12 | 12px | `--spacing-12` |
-| 16 | 16px | `--spacing-16` |
-| 20 | 20px | `--spacing-20` |
-| 24 | 24px | `--spacing-24` |
-| 28 | 28px | `--spacing-28` |
-| 32 | 32px | `--spacing-32` |
-| 40 | 40px | `--spacing-40` |
-| 48 | 48px | `--spacing-48` |
-| 64 | 64px | `--spacing-64` |
-| 80 | 80px | `--spacing-80` |
-| 96 | 96px | `--spacing-96` |
-| 120 | 120px | `--spacing-120` |
+| Name | Value | Token           |
+| ---- | ----- | --------------- |
+| 4    | 4px   | `--spacing-4`   |
+| 8    | 8px   | `--spacing-8`   |
+| 12   | 12px  | `--spacing-12`  |
+| 16   | 16px  | `--spacing-16`  |
+| 20   | 20px  | `--spacing-20`  |
+| 24   | 24px  | `--spacing-24`  |
+| 28   | 28px  | `--spacing-28`  |
+| 32   | 32px  | `--spacing-32`  |
+| 40   | 40px  | `--spacing-40`  |
+| 48   | 48px  | `--spacing-48`  |
+| 64   | 64px  | `--spacing-64`  |
+| 80   | 80px  | `--spacing-80`  |
+| 96   | 96px  | `--spacing-96`  |
+| 120  | 120px | `--spacing-120` |
 
 ## Border Radius
 
-| Element | Value |
-|---------|-------|
-| cards | 28–36px |
+| Element        | Value   |
+| -------------- | ------- |
+| cards          | 28–36px |
 | large surfaces | 36–40px |
-| icons | 14–20px |
-| pills | 10000px |
-| badges | 10–12px |
-| inputs | 14px |
-| buttons | 14px |
+| icons          | 14–20px |
+| pills          | 10000px |
+| badges         | 10–12px |
+| inputs         | 14px    |
+| buttons        | 14px    |
 
 The geometry should remain soft and premium even though the logo language is angular.
 
@@ -147,7 +148,7 @@ box-shadow: none;
 ### Elevated Card
 
 ```css
-border: 1px solid #2A2A2A;
+border: 1px solid #2a2a2a;
 box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
 ```
 
@@ -155,9 +156,9 @@ box-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
 
 ```css
 box-shadow:
-  inset 0 0.5px 0 rgba(255,255,255,0.22),
-  0 0 0 1px rgba(255,26,26,0.18),
-  0 8px 24px rgba(255,26,26,0.12);
+  inset 0 0.5px 0 rgba(255, 255, 255, 0.22),
+  0 0 0 1px rgba(255, 26, 26, 0.18),
+  0 8px 24px rgba(255, 26, 26, 0.12);
 ```
 
 ### Red Glow
@@ -276,8 +277,8 @@ Large red surfaces should be rare so they remain visually powerful.
 ### Focus
 
 ```css
-border-color: #FF1A1A;
-box-shadow: 0 0 0 3px rgba(255,26,26,0.10);
+border-color: #ff1a1a;
+box-shadow: 0 0 0 3px rgba(255, 26, 26, 0.1);
 ```
 
 ---
@@ -325,14 +326,14 @@ Do not add glow directly to the logo unless it is part of a hero visual.
 
 # Surfaces
 
-| Level | Name | Value | Purpose |
-|-------|------|-------|---------|
-| 0 | Void | `#000000` | Main page background |
-| 1 | Obsidian | `#080808` | Navigation and primary dark sections |
-| 2 | Carbon | `#101010` | Cards and panels |
-| 3 | Graphite | `#171717` | Elevated/recessed surfaces |
-| 4 | Red Wash | `#2A0808` | Accent containers |
-| 5 | Red | `#FF1A1A` | Primary brand surface |
+| Level | Name     | Value     | Purpose                              |
+| ----- | -------- | --------- | ------------------------------------ |
+| 0     | Void     | `#000000` | Main page background                 |
+| 1     | Obsidian | `#080808` | Navigation and primary dark sections |
+| 2     | Carbon   | `#101010` | Cards and panels                     |
+| 3     | Graphite | `#171717` | Elevated/recessed surfaces           |
+| 4     | Red Wash | `#2A0808` | Accent containers                    |
+| 5     | Red      | `#FF1A1A` | Primary brand surface                |
 
 ---
 
@@ -424,13 +425,13 @@ transition:
 Red controls may become slightly brighter.
 
 ```css
-background: #FF3333;
+background: #ff3333;
 ```
 
 ### Active
 
 ```css
-background: #B30000;
+background: #b30000;
 transform: translateY(1px);
 ```
 
@@ -658,19 +659,20 @@ When generating or modifying UI using this design system:
   --color-iron: #262626;
   --color-steel: #404040;
   --color-fog: #737373;
-  --color-ash: #A3A3A3;
-  --color-silver: #D4D4D4;
-  --color-snow: #F5F5F5;
-  --color-white: #FFFFFF;
+  --color-ash: #a3a3a3;
+  --color-silver: #d4d4d4;
+  --color-snow: #f5f5f5;
+  --color-white: #ffffff;
 
-  --color-red: #FF1A1A;
-  --color-red-bright: #FF3333;
-  --color-red-deep: #B30000;
-  --color-red-wash: #2A0808;
+  --color-red: #ff1a1a;
+  --color-red-bright: #ff3333;
+  --color-red-deep: #b30000;
+  --color-red-wash: #2a0808;
   --color-red-glow: rgba(255, 26, 26, 0.22);
 
   /* Typography */
-  --font-primary: 'Cosmica', 'DM Sans', Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-primary:
+    "Cosmica", "DM Sans", Inter, ui-sans-serif, system-ui, sans-serif;
 
   --text-caption: 12px;
   --text-meta: 13px;
@@ -723,17 +725,16 @@ When generating or modifying UI using this design system:
   --shadow-card: none;
   --shadow-elevated: 0 12px 40px rgba(0, 0, 0, 0.28);
   --shadow-red:
-    inset 0 0.5px 0 rgba(255,255,255,0.22),
-    0 0 0 1px rgba(255,26,26,0.18),
-    0 8px 24px rgba(255,26,26,0.12);
+    inset 0 0.5px 0 rgba(255, 255, 255, 0.22),
+    0 0 0 1px rgba(255, 26, 26, 0.18), 0 8px 24px rgba(255, 26, 26, 0.12);
 
   /* Surfaces */
   --surface-canvas: #000000;
   --surface-main: #080808;
   --surface-card: #101010;
   --surface-subtle: #171717;
-  --surface-red: #FF1A1A;
-  --surface-red-wash: #2A0808;
+  --surface-red: #ff1a1a;
+  --surface-red-wash: #2a0808;
 }
 ```
 
@@ -751,18 +752,19 @@ When generating or modifying UI using this design system:
   --color-iron: #262626;
   --color-steel: #404040;
   --color-fog: #737373;
-  --color-ash: #A3A3A3;
-  --color-silver: #D4D4D4;
-  --color-snow: #F5F5F5;
-  --color-white: #FFFFFF;
+  --color-ash: #a3a3a3;
+  --color-silver: #d4d4d4;
+  --color-snow: #f5f5f5;
+  --color-white: #ffffff;
 
-  --color-red: #FF1A1A;
-  --color-red-bright: #FF3333;
-  --color-red-deep: #B30000;
-  --color-red-wash: #2A0808;
+  --color-red: #ff1a1a;
+  --color-red-bright: #ff3333;
+  --color-red-deep: #b30000;
+  --color-red-wash: #2a0808;
 
   /* Typography */
-  --font-primary: 'Cosmica', 'DM Sans', Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-primary:
+    "Cosmica", "DM Sans", Inter, ui-sans-serif, system-ui, sans-serif;
 
   --text-caption: 12px;
   --text-meta: 13px;

@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowLeft, ChevronRight, FolderMinus, ShieldCheck } from "lucide-react";
+import {
+  ArrowLeft,
+  ChevronRight,
+  FolderMinus,
+  ShieldCheck,
+} from "lucide-react";
 import { fadeUp, staggerList } from "@/components/motion";
 
 const SECTIONS: {
@@ -15,16 +20,14 @@ const SECTIONS: {
   {
     href: "/settings/whitelist",
     title: "Command whitelist",
-    desc:
-      "Commands that can run without asking for approval. Turn the feature on or off and edit which lines are allowed.",
+    desc: "Commands that can run without asking for approval. Turn the feature on or off and edit which lines are allowed.",
     tag: "safety",
     Icon: ShieldCheck,
   },
   {
     href: "/settings/excludes",
     title: "File tree excludes",
-    desc:
-      "Folders and files hidden from the project list prepended to the prompt. Keeps dependency and build noise out of the AI's context.",
+    desc: "Folders and files hidden from the project list prepended to the prompt. Keeps dependency and build noise out of the AI's context.",
     tag: "context",
     Icon: FolderMinus,
   },

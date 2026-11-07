@@ -13,9 +13,7 @@ const EXPANDED = 220;
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
-  const isApp = APP_PATHS.some(
-    (p) => path === p || path.startsWith(p + "/"),
-  );
+  const isApp = APP_PATHS.some((p) => path === p || path.startsWith(p + "/"));
   const [open, setOpen] = useState(false);
 
   useEffect(() => {

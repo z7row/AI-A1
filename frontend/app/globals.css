@@ -258,15 +258,24 @@ body {
   cursor: not-allowed;
 }
 
-
 @keyframes pulseNote {
-  0%, 100% { background: rgba(255,197,61,0.08); }
-  50%      { background: rgba(255,197,61,0.22); }
+  0%,
+  100% {
+    background: rgba(255, 197, 61, 0.08);
+  }
+  50% {
+    background: rgba(255, 197, 61, 0.22);
+  }
 }
 
 @keyframes logoPulse {
-  0%, 100% { opacity: 1; }
-  50%      { opacity: 0.35; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
 }
 
 /* ─────────────────────────────────────────────
@@ -294,11 +303,25 @@ body {
 .md h6:first-child {
   margin-top: 0;
 }
-.md h1 { font-size: 1.85rem; }
-.md h2 { font-size: 1.45rem; }
-.md h3 { font-size: 1.18rem; font-weight: 600; }
-.md h4 { font-size: 1.02rem; font-weight: 600; }
-.md h5 { font-size: 0.92rem; font-weight: 600; letter-spacing: 0; }
+.md h1 {
+  font-size: 1.85rem;
+}
+.md h2 {
+  font-size: 1.45rem;
+}
+.md h3 {
+  font-size: 1.18rem;
+  font-weight: 600;
+}
+.md h4 {
+  font-size: 1.02rem;
+  font-weight: 600;
+}
+.md h5 {
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
 .md h6 {
   font-size: 0.82rem;
   font-weight: 600;
@@ -311,23 +334,45 @@ body {
   margin: 0.6em 0;
   line-height: 1.75;
 }
-.md p:first-child { margin-top: 0; }
-.md p:last-child { margin-bottom: 0; }
+.md p:first-child {
+  margin-top: 0;
+}
+.md p:last-child {
+  margin-bottom: 0;
+}
 
-.md strong { font-weight: 700; color: var(--ao-text-primary); }
-.md em { font-style: italic; }
-.md del { opacity: 0.7; }
+.md strong {
+  font-weight: 700;
+  color: var(--ao-text-primary);
+}
+.md em {
+  font-style: italic;
+}
+.md del {
+  opacity: 0.7;
+}
 
 .md ul,
 .md ol {
   padding-left: 1.4em;
   margin: 0.6em 0;
 }
-.md ul { list-style: disc; }
-.md ul ul { list-style: circle; }
-.md ol { list-style: decimal; }
-.md li { margin: 0.25em 0; line-height: 1.7; }
-.md li > p { margin: 0.15em 0; }
+.md ul {
+  list-style: disc;
+}
+.md ul ul {
+  list-style: circle;
+}
+.md ol {
+  list-style: decimal;
+}
+.md li {
+  margin: 0.25em 0;
+  line-height: 1.7;
+}
+.md li > p {
+  margin: 0.15em 0;
+}
 
 .md code {
   font-family: var(--font-mono);
@@ -363,7 +408,9 @@ body {
   text-decoration-thickness: 1px;
   text-underline-offset: 2px;
 }
-.md a:hover { color: var(--ao-red-bright); }
+.md a:hover {
+  color: var(--ao-red-bright);
+}
 
 .md blockquote {
   border-left: 3px solid var(--ao-red);
@@ -372,7 +419,9 @@ body {
   color: var(--ao-text-secondary);
   font-style: italic;
 }
-.md blockquote p { margin: 0.2em 0; }
+.md blockquote p {
+  margin: 0.2em 0;
+}
 
 .md hr {
   border: 0;
@@ -405,5 +454,3 @@ body {
 }
 
 /* ── AppShell: pages wrapped by the sidebar handle their own layout ── */
-
-

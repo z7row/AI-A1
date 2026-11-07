@@ -36,7 +36,7 @@ export function CopyButton({
       className={
         "inline-flex items-center justify-center gap-1.5 h-9 text-[13px] font-medium " +
         "text-(--ao-text-primary) transition-colors duration-150 shrink-0 " +
-        "hover:bg-white/[0.05] " +
+        "hover:bg-white/5 " +
         (iconOnly ? "w-9" : "px-3.5")
       }
       style={{ borderRadius: 9999 }}

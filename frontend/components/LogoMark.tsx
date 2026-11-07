@@ -43,7 +43,7 @@ export function LogoMarkStatus({
   const showDot = state !== "idle";
   const dot = showDot ? DOT_COLOR[state] : null;
   const pulsing = state === "running";
-  
+
   // Make the dot slightly smaller relative to the image size
   const dotSize = Math.max(8, Math.round((size * 12) / 64));
 

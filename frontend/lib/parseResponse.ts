@@ -57,15 +57,12 @@ function extractLeadingTitle(s: string): { title?: string; rest: string } {
   };
 }
 
-const KNOWN_SECTIONS = new Set([
-  "title",
-  "notes",
-  "plan",
-  "commands",
-  "files",
-]);
+const KNOWN_SECTIONS = new Set(["title", "notes", "plan", "commands", "files"]);
 
-function splitSections(raw: string): { sections: Record<string, string>; preamble: string } {
+function splitSections(raw: string): {
+  sections: Record<string, string>;
+  preamble: string;
+} {
   const fences: { start: number; end: number }[] = [];
   const fenceRe = /^(`{3,})([a-zA-Z0-9_+\-.]*)\s*$/gm;
   let fm;
@@ -234,7 +231,7 @@ export function parseAiResponse(input: string): Result {
 
   if (!h1Title) {
     const lines = withoutH1.split("\n");
-    const firstNonEmptyIdx = lines.findIndex(l => l.trim().length > 0);
+    const firstNonEmptyIdx = lines.findIndex((l) => l.trim().length > 0);
     if (firstNonEmptyIdx !== -1) {
       const firstLine = lines[firstNonEmptyIdx].trim();
       if (!firstLine.startsWith("##") && !firstLine.startsWith("###")) {

@@ -3,19 +3,19 @@ name: "Cinescope Mail"
 description: "Pure black void with frost-blue borders. Editorial serif hero, geometric sans sections, pill CTAs, and a multi-color accent system that performs against the dark."
 tags: [dark, editorial, developer, cinematic]
 colors:
-  primary:   "#f0f0f0"
+  primary: "#f0f0f0"
   secondary: "#a1a4a5"
-  tertiary:  "#ff801f"
-  neutral:   "#000000"
-  surface:   "#000000"
+  tertiary: "#ff801f"
+  neutral: "#000000"
+  surface: "#000000"
 typography:
   display: Fraunces
-  body:    Inter
-  mono:    "JetBrains Mono"
+  body: Inter
+  mono: "JetBrains Mono"
   scale:
     hero: "4.5rem / 1 / 400 / -0.96px"
-    h1:   "3.5rem / 1.2 / 400 / -2.8px"
-    h2:   "1.5rem / 1.3 / 500 / 0"
+    h1: "3.5rem / 1.2 / 400 / -2.8px"
+    h2: "1.5rem / 1.3 / 500 / 0"
     body: "1rem / 1.5 / 400 / 0"
 radius:
   sm: 4px
@@ -23,9 +23,9 @@ radius:
   lg: 16px
   pill: 9999px
 shadows:
-  card:   "rgba(176, 199, 217, 0.145) 0 0 0 1px"
+  card: "rgba(176, 199, 217, 0.145) 0 0 0 1px"
 borders:
-  card:    "1px solid rgba(214, 235, 253, 0.19)"
+  card: "1px solid rgba(214, 235, 253, 0.19)"
   divider: "rgba(214, 235, 253, 0.19)"
 buttons:
   primary:
@@ -64,7 +64,16 @@ charts:
   bar_gap: 12px
   highlight: all
   dot_marker: true
-  palette: ["#ff801f", "#11ff99", "#3b9eff", "#ffc53d", "#ff2047", "#ff801f", "#3b9eff"]
+  palette:
+    [
+      "#ff801f",
+      "#11ff99",
+      "#3b9eff",
+      "#ffc53d",
+      "#ff2047",
+      "#ff801f",
+      "#3b9eff",
+    ]
 fonts_url: "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap"
 dependencies: ["lucide-react"]
 ---
@@ -168,6 +177,7 @@ The typography is the lead actor. A three-font hierarchy: a dramatic display ser
 The signature visual element is the **icy frost border**. Instead of neutral gray, every container is outlined in `rgba(214, 235, 253, 0.19)` — a frosty, slightly blue-tinted line at 19% opacity that gives every divider a cold, crystalline quality against the black. Combined with pill-shaped CTAs (9999px), a multi-color accent system, and whisper-thin ring shadows, the result feels premium, precise, and quietly confident.
 
 **Signature moves**
+
 - Pure `#000000` void background — never warm or charcoal
 - Three-font hierarchy: display serif (hero), geometric sans (sections), grotesk (body)
 - Icy frost borders `rgba(214, 235, 253, 0.19)` — cold crystalline shimmer
@@ -179,11 +189,13 @@ The signature visual element is the **icy frost border**. Instead of neutral gra
 ## 2. Palette
 
 ### Canvas
+
 - **Void Black** `#000000` — page background
 - **Near White** `#f0f0f0` — primary text
 - **Pure White** `#ffffff` — solid CTA, max emphasis
 
 ### Accent System
+
 - **Orange** `#ff801f` (primary), `#ffa057` (light), `#ff5900` (deep)
 - **Green** `#11ff99`, `#22ff99` — success, positive
 - **Blue** `#3b9eff` (links), `#0081fd` — interactive
@@ -191,34 +203,37 @@ The signature visual element is the **icy frost border**. Instead of neutral gra
 - **Red** `#ff2047` — errors, destructive
 
 ### Neutrals
+
 - Silver `#a1a4a5` — secondary text
 - Dark Gray `#464a4d` — tertiary
 - Mid Gray `#5c5c5c` — hover
 
 ### Borders & Surface
+
 - Frost `rgba(214, 235, 253, 0.19)` — universal
 - Frost Soft `rgba(217, 237, 254, 0.145)` — list items
 - Ring `rgba(176, 199, 217, 0.145) 0 0 0 1px` — shadow-as-border
 
 ## 3. Typography
 
-| Role | Font | Size | Weight | Leading | Tracking |
-|------|------|------|--------|---------|----------|
-| Display Hero | Serif | 96px | 400 | 1.00 | -0.96px |
-| Section Head | Sans | 56px | 400 | 1.20 | -2.8px |
-| Sub-heading | Sans | 20px | 400 | 1.30 | normal |
-| Feature title | Body | 24px | 500 | 1.50 | normal |
-| Body L | Body | 18px | 400 | 1.50 | normal |
-| Body | Body | 16px | 400 | 1.50 | normal |
-| Nav | Sans | 14px | 500 | 1.43 | +0.35px |
-| Caption | Body | 14px | 400 | 1.60 | normal |
-| Code | Mono | 16px | 400 | 1.50 | normal |
+| Role          | Font  | Size | Weight | Leading | Tracking |
+| ------------- | ----- | ---- | ------ | ------- | -------- |
+| Display Hero  | Serif | 96px | 400    | 1.00    | -0.96px  |
+| Section Head  | Sans  | 56px | 400    | 1.20    | -2.8px   |
+| Sub-heading   | Sans  | 20px | 400    | 1.30    | normal   |
+| Feature title | Body  | 24px | 500    | 1.50    | normal   |
+| Body L        | Body  | 18px | 400    | 1.50    | normal   |
+| Body          | Body  | 16px | 400    | 1.50    | normal   |
+| Nav           | Sans  | 14px | 500    | 1.43    | +0.35px  |
+| Caption       | Body  | 14px | 400    | 1.60    | normal   |
+| Code          | Mono  | 16px | 400    | 1.50    | normal   |
 
 **The only positive tracking is on nav.** Display fonts compress (negative tracking); nav links breathe (+0.35px). Display serif is hero-only — never body. Each font has one job and never crosses lanes.
 
 ## 4. Buttons
 
 ### White Solid Pill (Primary)
+
 ```css
 background: #ffffff;
 color: #000000;
@@ -227,11 +242,13 @@ border-radius: 9999px;
 ```
 
 ### Frost Pill (Secondary)
+
 - Transparent background, `#f0f0f0` text
 - `1px solid rgba(214, 235, 253, 0.19)`, 9999px radius
 - Hover: `rgba(255,255,255,0.28)` glass
 
 ### Ghost
+
 - Transparent, no border, `#f0f0f0` text, 4px radius
 
 ## 5. Cards
@@ -253,18 +270,19 @@ border-radius: 9999px;
 
 ## 8. Depth & elevation
 
-| Level | Treatment | Use |
-|-------|-----------|-----|
-| 0 | Flat black | Default |
-| 1 | Frost border | Cards, dividers, buttons |
-| 1b | Ring shadow `0 0 0 1px` | Floating panels |
-| 3 | Heavy black focus ring `0 0 0 8px` | Accessibility |
+| Level | Treatment                          | Use                      |
+| ----- | ---------------------------------- | ------------------------ |
+| 0     | Flat black                         | Default                  |
+| 1     | Frost border                       | Cards, dividers, buttons |
+| 1b    | Ring shadow `0 0 0 1px`            | Floating panels          |
+| 3     | Heavy black focus ring `0 0 0 8px` | Accessibility            |
 
 **Borders ARE the depth.** On pure black, traditional shadows disappear. Cinescope Mail uses thin icy borders to create floating-glass-in-space depth — borders catch light, shadows don't.
 
 ## 9. Do's & don'ts
 
 ✅ **Do**
+
 - Use `#000000` — pure void, never charcoal
 - Apply frost borders (`rgba(214,235,253,0.19)`) for all structural lines
 - Pin display serif to hero only, geometric sans to sections, grotesk to body
@@ -273,6 +291,7 @@ border-radius: 9999px;
 - Use +0.35px tracking on nav (the only positive tracking)
 
 ❌ **Don't**
+
 - Use neutral gray borders — they kill the icy signature
 - Use bold display serif on body
 - Mix multiple accent colors in the same component
@@ -288,8 +307,8 @@ border-radius: 9999px;
 
 ### Colors
 
-| Role      | Value |
-|-----------|-------|
+| Role      | Value     |
+| --------- | --------- |
 | primary   | `#f0f0f0` |
 | secondary | `#a1a4a5` |
 | tertiary  | `#ff801f` |
@@ -303,11 +322,11 @@ border-radius: 9999px;
 - **Mono:** JetBrains Mono
 
 | Role | size / leading / weight / tracking |
-|------|------------------------------------|
-| Hero | 4.5rem / 1 / 400 / -0.96px |
-| H1   | 3.5rem / 1.2 / 400 / -2.8px |
-| H2   | 1.5rem / 1.3 / 500 / 0 |
-| Body | 1rem / 1.5 / 400 / 0 |
+| ---- | ---------------------------------- |
+| Hero | 4.5rem / 1 / 400 / -0.96px         |
+| H1   | 3.5rem / 1.2 / 400 / -2.8px        |
+| H2   | 1.5rem / 1.3 / 500 / 0             |
+| Body | 1rem / 1.5 / 400 / 0               |
 
 ### Radius
 
@@ -331,60 +350,60 @@ Four variants, each fully tokenized. The preview renders from these exact values
 
 #### Primary
 
-| Property | Value |
-|----------|-------|
-| shape | `pill` |
-| background | `#FFFFFF` |
-| color | `#000000` |
-| border | `none` |
-| padding | `10px 22px` |
-| fontWeight | `600` |
+| Property   | Value       |
+| ---------- | ----------- |
+| shape      | `pill`      |
+| background | `#FFFFFF`   |
+| color      | `#000000`   |
+| border     | `none`      |
+| padding    | `10px 22px` |
+| fontWeight | `600`       |
 
 #### Secondary
 
-| Property | Value |
-|----------|-------|
-| shape | `pill` |
-| background | `#000000` |
-| color | `#FFFFFF` |
-| border | `1px solid rgba(255,255,255,0.12)` |
-| padding | `10px 22px` |
-| fontWeight | `600` |
+| Property   | Value                              |
+| ---------- | ---------------------------------- |
+| shape      | `pill`                             |
+| background | `#000000`                          |
+| color      | `#FFFFFF`                          |
+| border     | `1px solid rgba(255,255,255,0.12)` |
+| padding    | `10px 22px`                        |
+| fontWeight | `600`                              |
 
 #### Outline
 
-| Property | Value |
-|----------|-------|
-| shape | `pill` |
-| background | `transparent` |
-| color | `#FFFFFF` |
-| border | `1px solid rgba(135,206,250,0.4)` |
-| padding | `10px 22px` |
-| fontWeight | `600` |
+| Property   | Value                             |
+| ---------- | --------------------------------- |
+| shape      | `pill`                            |
+| background | `transparent`                     |
+| color      | `#FFFFFF`                         |
+| border     | `1px solid rgba(135,206,250,0.4)` |
+| padding    | `10px 22px`                       |
+| fontWeight | `600`                             |
 
 #### Ghost
 
-| Property | Value |
-|----------|-------|
-| shape | `pill` |
-| background | `transparent` |
-| color | `rgba(255,255,255,0.6)` |
-| border | `none` |
-| padding | `10px 14px` |
-| fontWeight | `600` |
+| Property   | Value                   |
+| ---------- | ----------------------- |
+| shape      | `pill`                  |
+| background | `transparent`           |
+| color      | `rgba(255,255,255,0.6)` |
+| border     | `none`                  |
+| padding    | `10px 14px`             |
+| fontWeight | `600`                   |
 
 ### Charts
 
-| Property | Value |
-|----------|-------|
-| variant | `thin-bars` |
-| strokeWidth | `1.5` |
-| fillOpacity | `0` |
-| gridlines | `false` |
-| barGap | `12px` |
-| highlight | `all` |
-| dotMarker | `true` |
-| palette | `#ff801f`, `#11ff99`, `#3b9eff`, `#ffc53d`, `#ff2047`, `#ff801f`, `#3b9eff` |
+| Property    | Value                                                                       |
+| ----------- | --------------------------------------------------------------------------- |
+| variant     | `thin-bars`                                                                 |
+| strokeWidth | `1.5`                                                                       |
+| fillOpacity | `0`                                                                         |
+| gridlines   | `false`                                                                     |
+| barGap      | `12px`                                                                      |
+| highlight   | `all`                                                                       |
+| dotMarker   | `true`                                                                      |
+| palette     | `#ff801f`, `#11ff99`, `#3b9eff`, `#ffc53d`, `#ff2047`, `#ff801f`, `#3b9eff` |
 
 ---
 
@@ -425,11 +444,11 @@ Four variants, each fully tokenized. The preview renders from these exact values
 
 ### Density
 
-| Mode | padding × | row × | body | radius × | Use for |
-|------|-----------|-------|------|----------|---------|
-| compact | 0.72 | 0.78 | 0.8125rem | 0.85 | Information-dense — tables, IDEs, dashboards |
-| comfortable | 1 | 1 | 0.9375rem | — | Default — most product UI |
-| spacious | 1.35 | 1.3 | 1rem | 1.15 | Editorial — marketing, long-form, settings |
+| Mode        | padding × | row × | body      | radius × | Use for                                      |
+| ----------- | --------- | ----- | --------- | -------- | -------------------------------------------- |
+| compact     | 0.72      | 0.78  | 0.8125rem | 0.85     | Information-dense — tables, IDEs, dashboards |
+| comfortable | 1         | 1     | 0.9375rem | —        | Default — most product UI                    |
+| spacious    | 1.35      | 1.3   | 1rem      | 1.15     | Editorial — marketing, long-form, settings   |
 
 ### Motion
 
@@ -439,28 +458,28 @@ Four variants, each fully tokenized. The preview renders from these exact values
 transition: all 320ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 ```
 
-| Token | Value |
-|-------|-------|
-| duration.instant | `80ms` |
-| duration.fast | `180ms` |
-| duration.base | `320ms` |
-| duration.slow | `500ms` |
-| easing.standard | `cubic-bezier(0.25, 0.46, 0.45, 0.94)` |
-| easing.decelerate | `cubic-bezier(0.0, 0, 0.2, 1)` |
-| easing.accelerate | `cubic-bezier(0.4, 0, 1, 1)` |
-| easing.spring | `cubic-bezier(0.5, 1.2, 0.6, 1)` |
+| Token             | Value                                  |
+| ----------------- | -------------------------------------- |
+| duration.instant  | `80ms`                                 |
+| duration.fast     | `180ms`                                |
+| duration.base     | `320ms`                                |
+| duration.slow     | `500ms`                                |
+| easing.standard   | `cubic-bezier(0.25, 0.46, 0.45, 0.94)` |
+| easing.decelerate | `cubic-bezier(0.0, 0, 0.2, 1)`         |
+| easing.accelerate | `cubic-bezier(0.4, 0, 1, 1)`           |
+| easing.spring     | `cubic-bezier(0.5, 1.2, 0.6, 1)`       |
 
 ### Elevation
 
 Five-level scale, system-specific recipe.
 
-| Level | Shadow | Recipe |
-|-------|--------|--------|
-| level0 | `none` | Hairline only — typical editorial resting state. |
-| level1 | `0 1px 2px rgba(15,23,42,0.04)` | Barely visible — list rows, dividers. |
-| level2 | `0 8px 24px -12px rgba(15,23,42,0.12)` | Pull-quote, sidebar — soft lift. |
-| level3 | `0 16px 40px -16px rgba(15,23,42,0.18)` | Cover story card — clear lift. |
-| level4 | `0 32px 80px -24px rgba(15,23,42,0.28)` | Modal — overlays the layout, with scrim. |
+| Level  | Shadow                                  | Recipe                                           |
+| ------ | --------------------------------------- | ------------------------------------------------ |
+| level0 | `none`                                  | Hairline only — typical editorial resting state. |
+| level1 | `0 1px 2px rgba(15,23,42,0.04)`         | Barely visible — list rows, dividers.            |
+| level2 | `0 8px 24px -12px rgba(15,23,42,0.12)`  | Pull-quote, sidebar — soft lift.                 |
+| level3 | `0 16px 40px -16px rgba(15,23,42,0.18)` | Cover story card — clear lift.                   |
+| level4 | `0 32px 80px -24px rgba(15,23,42,0.28)` | Modal — overlays the layout, with scrim.         |
 
 ### Content
 
@@ -476,10 +495,10 @@ Five-level scale, system-specific recipe.
 
 **Overall:** AAA
 
-| Pair | Ratio | Required | Grade | Suggested fix |
-|------|-------|----------|-------|---------------|
-| Body text on surface | 18.43:1 | AA | AAA | — |
-| Body text on canvas | 18.43:1 | AA | AAA | — |
-| Muted text on surface | 8.37:1 | AA | AAA | — |
-| Accent on surface | 8.36:1 | AA-Large | AAA | — |
-| Accent on canvas | 8.36:1 | AA-Large | AAA | — |
+| Pair                  | Ratio   | Required | Grade | Suggested fix |
+| --------------------- | ------- | -------- | ----- | ------------- |
+| Body text on surface  | 18.43:1 | AA       | AAA   | —             |
+| Body text on canvas   | 18.43:1 | AA       | AAA   | —             |
+| Muted text on surface | 8.37:1  | AA       | AAA   | —             |
+| Accent on surface     | 8.36:1  | AA-Large | AAA   | —             |
+| Accent on canvas      | 8.36:1  | AA-Large | AAA   | —             |

@@ -16,9 +16,7 @@ export function FileTree({
 }) {
   if (!root) {
     return (
-      <p className="font-mono text-[10px] text-(--secondary)">
-        — no cwd —
-      </p>
+      <p className="font-mono text-[10px] text-(--secondary)">— no cwd —</p>
     );
   }
   return (
@@ -60,9 +58,7 @@ function TreeRoot({
     );
   }
   if (entries.length === 0) {
-    return (
-      <p className="py-1 text-(--secondary)">empty</p>
-    );
+    return <p className="py-1 text-(--secondary)">empty</p>;
   }
 
   return (
@@ -113,7 +109,7 @@ function TreeNode({
       <button
         type="button"
         onClick={toggle}
-        className="w-full flex items-center gap-1.5 py-1 pr-1 text-left hover:bg-white/[0.03] transition-colors duration-150"
+        className="w-full flex items-center gap-1.5 py-1 pr-1 text-left hover:bg-white/3 transition-colors duration-150"
         style={{ paddingLeft: indent }}
       >
         {entry.dir ? (

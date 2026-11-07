@@ -4,8 +4,7 @@
    - fail    → short Web Audio descending tones
    ──────────────────────────────────────────────────────────── */
 
-const SUCCESS_SRC =
-  "/sounds/soundshelfstudio-ui-success-chime-513565.mp3";
+const SUCCESS_SRC = "/sounds/soundshelfstudio-ui-success-chime-513565.mp3";
 
 let successAudio: HTMLAudioElement | null = null;
 let audioCtx: AudioContext | null = null;

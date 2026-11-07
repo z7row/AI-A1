@@ -49,7 +49,7 @@ function drawFavicon(state: FaviconState, colorOverride?: string) {
 
     // Add a thin border to the dot
     ctx.lineWidth = 4;
-    ctx.strokeStyle = "#000000"; 
+    ctx.strokeStyle = "#000000";
     ctx.stroke();
 
     // Update the favicon

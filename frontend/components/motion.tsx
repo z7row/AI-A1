@@ -43,10 +43,7 @@ export const slideLeft: Variants = {
   },
 };
 
-export const staggerList = (
-  delay = 0.06,
-  initial = 0.05,
-): Variants => ({
+export const staggerList = (delay = 0.06, initial = 0.05): Variants => ({
   hidden: {},
   visible: {
     transition: { staggerChildren: delay, delayChildren: initial },

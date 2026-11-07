@@ -15,7 +15,11 @@ import {
   sendInputToSocket,
   stripAnsi,
 } from "@/lib/api";
-import { scanDangerous, isSensitiveCommand, type Danger } from "@/lib/dangerous";
+import {
+  scanDangerous,
+  isSensitiveCommand,
+  type Danger,
+} from "@/lib/dangerous";
 import { setFavicon } from "@/lib/favicon";
 import {
   ensureNotifyPermission,
@@ -35,7 +39,11 @@ import { WorkspaceBody } from "./components/WorkspaceBody";
 
 const AUTO_COPY_KEY = "ao-auto-copy";
 function slug(s: string): string {
-  return s.toLowerCase().trim().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+  return s
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
 }
 
 export default function WorkspacePage() {
@@ -59,9 +67,11 @@ export default function WorkspacePage() {
   const [showDetails, setShowDetails] = useState(false);
   const [splitPct, setSplitPct] = useState(50);
   const [menuOpen, setMenuOpen] = useState(false);
-  
-  const [deselectedItems, setDeselectedItems] = useState<Set<string>>(new Set());
-  
+
+  const [deselectedItems, setDeselectedItems] = useState<Set<string>>(
+    new Set(),
+  );
+
   const whitelist = useWhitelist();
 
   const socketRef = useRef<WebSocket | null>(null);
@@ -232,7 +242,7 @@ export default function WorkspacePage() {
   }, [parsed]);
 
   const toggleItem = (key: string) => {
-    setDeselectedItems(prev => {
+    setDeselectedItems((prev) => {
       const next = new Set(prev);
       if (next.has(key)) next.delete(key);
       else next.add(key);
@@ -245,11 +255,17 @@ export default function WorkspacePage() {
     const cmdLines = parsed.commands.split("\n");
     return {
       ...parsed,
-      commands: cmdLines.filter((_, i) => !deselectedItems.has(`cmd:${i}`)).join("\n"),
+      commands: cmdLines
+        .filter((_, i) => !deselectedItems.has(`cmd:${i}`))
+        .join("\n"),
       files: parsed.files.filter((_, i) => !deselectedItems.has(`file:${i}`)),
       edits: parsed.edits.filter((_, i) => !deselectedItems.has(`edit:${i}`)),
-      patches: parsed.patches.filter((_, i) => !deselectedItems.has(`patch:${i}`)),
-      deletions: parsed.deletions.filter((_, i) => !deselectedItems.has(`delete:${i}`)),
+      patches: parsed.patches.filter(
+        (_, i) => !deselectedItems.has(`patch:${i}`),
+      ),
+      deletions: parsed.deletions.filter(
+        (_, i) => !deselectedItems.has(`delete:${i}`),
+      ),
     };
   }, [parsed, deselectedItems]);
 
@@ -280,7 +296,10 @@ export default function WorkspacePage() {
         }
       }
 
-      const _safeParsed = { ...filteredParsed, commands: safeCommands.join("\n") };
+      const _safeParsed = {
+        ...filteredParsed,
+        commands: safeCommands.join("\n"),
+      };
       const _sensitiveParsed = {
         ...filteredParsed,
         commands: sensitiveCommands.join("\n"),
@@ -313,10 +332,10 @@ export default function WorkspacePage() {
   useEffect(() => {
     if (status !== "done" && status !== "failed" && status !== "killed") return;
     const success = status === "done";
-    
+
     // Auto-send output to AI on failure
     if (!success) {
-       window.dispatchEvent(new CustomEvent("ao-task-failed"));
+      window.dispatchEvent(new CustomEvent("ao-task-failed"));
     }
 
     if (getBrowserEnabled() && isPageHidden()) {
@@ -341,10 +360,13 @@ export default function WorkspacePage() {
     () => (script ? scanDangerous(script) : []),
     [script],
   );
-  
+
   const fileChanges = useMemo(() => {
     if (!parsed) return [];
-    const map = new Map<string, { path: string; label: string; color: string; count: number }>();
+    const map = new Map<
+      string,
+      { path: string; label: string; color: string; count: number }
+    >();
     const add = (path: string, label: string, color: string) => {
       const key = `${label}-${path}`;
       if (map.has(key)) {
@@ -460,7 +482,10 @@ export default function WorkspacePage() {
       });
       socket.addEventListener("close", () => {
         // If the server drops the socket, reconcile immediately instead of waiting
-        if (statusRef.current === "running" || statusRef.current === "pending") {
+        if (
+          statusRef.current === "running" ||
+          statusRef.current === "pending"
+        ) {
           reconcileStatus(res.id);
         }
       });
@@ -492,7 +517,7 @@ export default function WorkspacePage() {
       setShowSensitiveDanger(true);
       return;
     }
-    
+
     // Removed ensureNotifyPermission() from here because it blocks the UI
     // The user can enable notifications from the menu instead.
     actuallyRun(fullScript);
@@ -580,13 +605,19 @@ export default function WorkspacePage() {
     return (
       <div className="h-dvh grid place-items-center px-6">
         <div className="max-w-md text-center">
-          <p className="font-mono text-[11px] uppercase tracking-[0.22em]" style={{ color: "var(--ao-red)" }}>
+          <p
+            className="font-mono text-[11px] uppercase tracking-[0.22em]"
+            style={{ color: "var(--ao-red)" }}
+          >
             parse error
           </p>
           <p className="mt-3 text-[14px] leading-[1.6] text-(--primary)">
             {parseError}
           </p>
-          <button className="btn btn-secondary mt-6" onClick={() => router.push("/run")}>
+          <button
+            className="btn btn-secondary mt-6"
+            onClick={() => router.push("/run")}
+          >
             Back to input
           </button>
         </div>
@@ -649,7 +680,11 @@ export default function WorkspacePage() {
           fileChanges={fileChanges}
         />
       </div>
-      <pre id="ao-terminal-output" aria-hidden="true" style={{ display: "none" }}>
+      <pre
+        id="ao-terminal-output"
+        aria-hidden="true"
+        style={{ display: "none" }}
+      >
         {log}
       </pre>
       <div
@@ -703,7 +738,7 @@ export default function WorkspacePage() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.96 }}
             transition={{ duration: 0.22, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="fixed bottom-6 right-6 z-[60] px-4 h-11 inline-flex items-center gap-2 rounded-full text-[13px] font-medium"
+            className="fixed bottom-6 right-6 z-60 px-4 h-11 inline-flex items-center gap-2 rounded-full text-[13px] font-medium"
             style={{
               background: "var(--ao-bg-subtle)",
               color: "var(--ao-text-primary)",

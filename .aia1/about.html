@@ -1,382 +1,588 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI-A1 — شرح مبسّط</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  :root {
-    --bg: #0a0e1a;
-    --bg-soft: #111827;
-    --card: #131a2b;
-    --card-2: #172236;
-    --border: #243049;
-    --text: #e6ecf5;
-    --muted: #8b98b0;
-    --accent: #38bdf8;
-    --accent-2: #a78bfa;
-    --green: #34d399;
-    --amber: #fbbf24;
-    --red: #f87171;
-    --radius: 16px;
-    --mono: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
-  }
-  html, body { height: 100%; }
-  body {
-    font-family: 'Segoe UI', Tahoma, system-ui, -apple-system, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.8;
-    -webkit-font-smoothing: antialiased;
-    background-image:
-      radial-gradient(circle at 15% -5%, rgba(56,189,248,0.14), transparent 42%),
-      radial-gradient(circle at 85% 10%, rgba(167,139,250,0.12), transparent 45%);
-    background-attachment: fixed;
-  }
-  .wrap { max-width: 1000px; margin: 0 auto; padding: 56px 24px 96px; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AI-A1 — شرح مبسّط</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --bg: #0a0e1a;
+        --bg-soft: #111827;
+        --card: #131a2b;
+        --card-2: #172236;
+        --border: #243049;
+        --text: #e6ecf5;
+        --muted: #8b98b0;
+        --accent: #38bdf8;
+        --accent-2: #a78bfa;
+        --green: #34d399;
+        --amber: #fbbf24;
+        --red: #f87171;
+        --radius: 16px;
+        --mono: "JetBrains Mono", "Consolas", "Courier New", monospace;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        font-family:
+          "Segoe UI",
+          Tahoma,
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.8;
+        -webkit-font-smoothing: antialiased;
+        background-image:
+          radial-gradient(
+            circle at 15% -5%,
+            rgba(56, 189, 248, 0.14),
+            transparent 42%
+          ),
+          radial-gradient(
+            circle at 85% 10%,
+            rgba(167, 139, 250, 0.12),
+            transparent 45%
+          );
+        background-attachment: fixed;
+      }
+      .wrap {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 56px 24px 96px;
+      }
 
-  /* HERO */
-  .hero { text-align: center; margin-bottom: 64px; }
-  .badge {
-    display: inline-block;
-    padding: 6px 14px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    font-size: 13px;
-    color: var(--muted);
-    letter-spacing: .4px;
-    margin-bottom: 22px;
-    background: rgba(255,255,255,0.02);
-  }
-  .badge span { color: var(--accent); }
-  .hero h1 {
-    font-size: clamp(38px, 6vw, 64px);
-    font-weight: 800;
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    letter-spacing: -1px;
-    margin-bottom: 14px;
-  }
-  .hero p {
-    color: var(--muted);
-    font-size: clamp(16px, 2.2vw, 19px);
-    max-width: 620px;
-    margin: 0 auto;
-  }
+      /* HERO */
+      .hero {
+        text-align: center;
+        margin-bottom: 64px;
+      }
+      .badge {
+        display: inline-block;
+        padding: 6px 14px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-size: 13px;
+        color: var(--muted);
+        letter-spacing: 0.4px;
+        margin-bottom: 22px;
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .badge span {
+        color: var(--accent);
+      }
+      .hero h1 {
+        font-size: clamp(38px, 6vw, 64px);
+        font-weight: 800;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1px;
+        margin-bottom: 14px;
+      }
+      .hero p {
+        color: var(--muted);
+        font-size: clamp(16px, 2.2vw, 19px);
+        max-width: 620px;
+        margin: 0 auto;
+      }
 
-  /* SECTIONS */
-  section { margin-bottom: 56px; }
-  .section-title {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 22px;
-  }
-  .section-title .dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    box-shadow: 0 0 14px rgba(56,189,248,0.6);
-  }
+      /* SECTIONS */
+      section {
+        margin-bottom: 56px;
+      }
+      .section-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 22px;
+      }
+      .section-title .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        box-shadow: 0 0 14px rgba(56, 189, 248, 0.6);
+      }
 
-  /* CARD */
-  .card {
-    background: linear-gradient(180deg, var(--card), var(--card-2));
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 26px 28px;
-    margin-bottom: 16px;
-  }
-  .card p { color: var(--text); }
-  .card p + p { margin-top: 10px; }
-  .muted { color: var(--muted); }
+      /* CARD */
+      .card {
+        background: linear-gradient(180deg, var(--card), var(--card-2));
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 26px 28px;
+        margin-bottom: 16px;
+      }
+      .card p {
+        color: var(--text);
+      }
+      .card p + p {
+        margin-top: 10px;
+      }
+      .muted {
+        color: var(--muted);
+      }
 
-  /* PROBLEM / SOLUTION */
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .col { padding: 22px 24px; border-radius: var(--radius); border: 1px solid var(--border); }
-  .col.bad { background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.28); }
-  .col.good { background: rgba(52,211,153,0.06); border-color: rgba(52,211,153,0.28); }
-  .col h3 { font-size: 15px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
-  .col.bad h3 { color: var(--red); }
-  .col.good h3 { color: var(--green); }
-  .col ul { list-style: none; }
-  .col li { color: var(--muted); font-size: 14.5px; padding: 6px 0; padding-inline-start: 22px; position: relative; }
-  .col li::before {
-    content: '•';
-    position: absolute;
-    inset-inline-start: 0;
-    color: currentColor;
-    opacity: .6;
-  }
+      /* PROBLEM / SOLUTION */
+      .two-col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .col {
+        padding: 22px 24px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+      }
+      .col.bad {
+        background: rgba(248, 113, 113, 0.06);
+        border-color: rgba(248, 113, 113, 0.28);
+      }
+      .col.good {
+        background: rgba(52, 211, 153, 0.06);
+        border-color: rgba(52, 211, 153, 0.28);
+      }
+      .col h3 {
+        font-size: 15px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .col.bad h3 {
+        color: var(--red);
+      }
+      .col.good h3 {
+        color: var(--green);
+      }
+      .col ul {
+        list-style: none;
+      }
+      .col li {
+        color: var(--muted);
+        font-size: 14.5px;
+        padding: 6px 0;
+        padding-inline-start: 22px;
+        position: relative;
+      }
+      .col li::before {
+        content: "•";
+        position: absolute;
+        inset-inline-start: 0;
+        color: currentColor;
+        opacity: 0.6;
+      }
 
-  /* FLOW */
-  .flow {
-    display: flex;
-    align-items: stretch;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .step {
-    flex: 1 1 150px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 18px 16px;
-    text-align: center;
-    position: relative;
-    transition: transform .25s ease, border-color .25s ease;
-  }
-  .step:hover { transform: translateY(-3px); border-color: var(--accent); }
-  .step .num {
-    width: 26px; height: 26px; line-height: 26px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-2));
-    color: #04121f; font-weight: 700; font-size: 13px;
-    border-radius: 8px; display: inline-block; margin-bottom: 10px;
-  }
-  .step h4 { font-size: 14px; margin-bottom: 6px; color: var(--text); }
-  .step p { font-size: 12.5px; color: var(--muted); }
+      /* FLOW */
+      .flow {
+        display: flex;
+        align-items: stretch;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .step {
+        flex: 1 1 150px;
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 18px 16px;
+        text-align: center;
+        position: relative;
+        transition:
+          transform 0.25s ease,
+          border-color 0.25s ease;
+      }
+      .step:hover {
+        transform: translateY(-3px);
+        border-color: var(--accent);
+      }
+      .step .num {
+        width: 26px;
+        height: 26px;
+        line-height: 26px;
+        background: linear-gradient(135deg, var(--accent), var(--accent-2));
+        color: #04121f;
+        font-weight: 700;
+        font-size: 13px;
+        border-radius: 8px;
+        display: inline-block;
+        margin-bottom: 10px;
+      }
+      .step h4 {
+        font-size: 14px;
+        margin-bottom: 6px;
+        color: var(--text);
+      }
+      .step p {
+        font-size: 12.5px;
+        color: var(--muted);
+      }
 
-  /* SHAPES */
-  .shape-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-  .shape {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 22px 20px;
-    position: relative;
-    overflow: hidden;
-  }
-  .shape::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(56,189,248,0.06), transparent 60%);
-    pointer-events: none;
-  }
-  .shape .tag {
-    display: inline-block;
-    font-size: 11px; font-weight: 700; letter-spacing: 1px;
-    padding: 4px 10px; border-radius: 6px;
-    background: rgba(56,189,248,0.12);
-    color: var(--accent);
-    margin-bottom: 12px;
-    font-family: var(--mono);
-  }
-  .shape.s-a .tag { background: rgba(52,211,153,0.12); color: var(--green); }
-  .shape.s-b .tag { background: rgba(251,191,36,0.12); color: var(--amber); }
-  .shape h4 { font-size: 16px; margin-bottom: 8px; }
-  .shape p { color: var(--muted); font-size: 13.5px; }
+      /* SHAPES */
+      .shape-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+      }
+      .shape {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 22px 20px;
+        position: relative;
+        overflow: hidden;
+      }
+      .shape::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(56, 189, 248, 0.06),
+          transparent 60%
+        );
+        pointer-events: none;
+      }
+      .shape .tag {
+        display: inline-block;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        padding: 4px 10px;
+        border-radius: 6px;
+        background: rgba(56, 189, 248, 0.12);
+        color: var(--accent);
+        margin-bottom: 12px;
+        font-family: var(--mono);
+      }
+      .shape.s-a .tag {
+        background: rgba(52, 211, 153, 0.12);
+        color: var(--green);
+      }
+      .shape.s-b .tag {
+        background: rgba(251, 191, 36, 0.12);
+        color: var(--amber);
+      }
+      .shape h4 {
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+      .shape p {
+        color: var(--muted);
+        font-size: 13.5px;
+      }
 
-  /* CONCEPTS */
-  .concepts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-  .concept {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px 22px;
-  }
-  .concept h4 { font-size: 15px; margin-bottom: 8px; display: flex; gap: 10px; align-items: center; }
-  .concept h4 code {
-    font-family: var(--mono);
-    font-size: 12px;
-    background: rgba(56,189,248,0.1);
-    color: var(--accent);
-    padding: 2px 8px;
-    border-radius: 6px;
-  }
-  .concept p { color: var(--muted); font-size: 13.5px; }
+      /* CONCEPTS */
+      .concepts {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .concept {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 20px 22px;
+      }
+      .concept h4 {
+        font-size: 15px;
+        margin-bottom: 8px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+      .concept h4 code {
+        font-family: var(--mono);
+        font-size: 12px;
+        background: rgba(56, 189, 248, 0.1);
+        color: var(--accent);
+        padding: 2px 8px;
+        border-radius: 6px;
+      }
+      .concept p {
+        color: var(--muted);
+        font-size: 13.5px;
+      }
 
-  /* SAFETY LIST */
-  .safety { list-style: none; }
-  .safety li {
-    display: flex; gap: 12px; align-items: flex-start;
-    padding: 14px 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .safety li:last-child { border-bottom: none; }
-  .safety .ico {
-    flex: 0 0 auto;
-    width: 28px; height: 28px; line-height: 28px;
-    text-align: center; border-radius: 8px;
-    background: rgba(52,211,153,0.12); color: var(--green);
-    font-weight: 700; font-size: 14px;
-  }
-  .safety .txt strong { display: block; color: var(--text); font-size: 14.5px; margin-bottom: 2px; }
-  .safety .txt span { color: var(--muted); font-size: 13.5px; }
+      /* SAFETY LIST */
+      .safety {
+        list-style: none;
+      }
+      .safety li {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 14px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .safety li:last-child {
+        border-bottom: none;
+      }
+      .safety .ico {
+        flex: 0 0 auto;
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        text-align: center;
+        border-radius: 8px;
+        background: rgba(52, 211, 153, 0.12);
+        color: var(--green);
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .safety .txt strong {
+        display: block;
+        color: var(--text);
+        font-size: 14.5px;
+        margin-bottom: 2px;
+      }
+      .safety .txt span {
+        color: var(--muted);
+        font-size: 13.5px;
+      }
 
-  /* CODE */
-  pre {
-    direction: ltr; text-align: left;
-    background: #0d1421;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 16px 18px;
-    overflow-x: auto;
-    font-family: var(--mono);
-    font-size: 13px;
-    line-height: 1.65;
-    color: #cbd5e1;
-    margin: 14px 0;
-  }
-  pre .cm { color: #64748b; }
-  pre .kw { color: var(--accent-2); }
-  pre .str { color: var(--green); }
-  code {
-    font-family: var(--mono);
-    font-size: 13px;
-    background: rgba(255,255,255,0.06);
-    padding: 2px 7px;
-    border-radius: 5px;
-    color: var(--accent);
-  }
+      /* CODE */
+      pre {
+        direction: ltr;
+        text-align: left;
+        background: #0d1421;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 16px 18px;
+        overflow-x: auto;
+        font-family: var(--mono);
+        font-size: 13px;
+        line-height: 1.65;
+        color: #cbd5e1;
+        margin: 14px 0;
+      }
+      pre .cm {
+        color: #64748b;
+      }
+      pre .kw {
+        color: var(--accent-2);
+      }
+      pre .str {
+        color: var(--green);
+      }
+      code {
+        font-family: var(--mono);
+        font-size: 13px;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 2px 7px;
+        border-radius: 5px;
+        color: var(--accent);
+      }
 
-  /* FOOTER */
-  footer {
-    text-align: center;
-    color: var(--muted);
-    font-size: 13px;
-    margin-top: 40px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border);
-  }
-  footer strong { color: var(--text); }
+      /* FOOTER */
+      footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 40px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border);
+      }
+      footer strong {
+        color: var(--text);
+      }
 
-  @media (max-width: 720px) {
-    .two-col, .concepts, .shape-grid { grid-template-columns: 1fr; }
-    .wrap { padding: 40px 18px 72px; }
-  }
-</style>
-</head>
-<body>
-<div class="wrap">
+      @media (max-width: 720px) {
+        .two-col,
+        .concepts,
+        .shape-grid {
+          grid-template-columns: 1fr;
+        }
+        .wrap {
+          padding: 40px 18px 72px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <!-- HERO -->
+      <header class="hero">
+        <div class="badge">
+          أداة <span>تنسيق وتنفيذ</span> لردود الذكاء الاصطناعي
+        </div>
+        <h1>AI-A1</h1>
+        <p>
+          جسر بين ردّ الذكاء الاصطناعي وجهازك — يحوّل النص إلى ملفات وأوامر
+          تُنفّذ فعليًا، بأمان.
+        </p>
+      </header>
 
-  <!-- HERO -->
-  <header class="hero">
-    <div class="badge">أداة <span>تنسيق وتنفيذ</span> لردود الذكاء الاصطناعي</div>
-    <h1>AI-A1</h1>
-    <p>جسر بين ردّ الذكاء الاصطناعي وجهازك — يحوّل النص إلى ملفات وأوامر تُنفّذ فعليًا، بأمان.</p>
-  </header>
+      <!-- PROBLEM / SOLUTION -->
+      <section>
+        <h2 class="section-title">
+          <span class="dot"></span> ما المشكلة التي تحلّها؟
+        </h2>
+        <div class="two-col">
+          <div class="col bad">
+            <h3>✗ بدون AI-A1</h3>
+            <ul>
+              <li>تنسخ الكود يدويًا من الرد</li>
+              <li>تلصق في الملف الصحيح بنفسك</li>
+              <li>تنفّذ أوامر التثبيت والتشغيل يدويًا</li>
+              <li>تتعب في التعديلات الصغيرة على ملفات كبيرة</li>
+              <li>احتمال الخطأ البشري في كل خطوة</li>
+            </ul>
+          </div>
+          <div class="col good">
+            <h3>✓ مع AI-A1</h3>
+            <ul>
+              <li>الرد يحدّد الملفات والأوامر بدقة</li>
+              <li>أداة محلية تقرأ الرد وتطبّق التغييرات</li>
+              <li>تعديلات جزئية عبر FIND / REPLACE</li>
+              <li>قواعد أمان تمنع الأوامر المدمّرة</li>
+              <li>سير عمل موحّد وقابل للتكرار</li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
-  <!-- PROBLEM / SOLUTION -->
-  <section>
-    <h2 class="section-title"><span class="dot"></span> ما المشكلة التي تحلّها؟</h2>
-    <div class="two-col">
-      <div class="col bad">
-        <h3>✗ بدون AI-A1</h3>
-        <ul>
-          <li>تنسخ الكود يدويًا من الرد</li>
-          <li>تلصق في الملف الصحيح بنفسك</li>
-          <li>تنفّذ أوامر التثبيت والتشغيل يدويًا</li>
-          <li>تتعب في التعديلات الصغيرة على ملفات كبيرة</li>
-          <li>احتمال الخطأ البشري في كل خطوة</li>
-        </ul>
-      </div>
-      <div class="col good">
-        <h3>✓ مع AI-A1</h3>
-        <ul>
-          <li>الرد يحدّد الملفات والأوامر بدقة</li>
-          <li>أداة محلية تقرأ الرد وتطبّق التغييرات</li>
-          <li>تعديلات جزئية عبر FIND / REPLACE</li>
-          <li>قواعد أمان تمنع الأوامر المدمّرة</li>
-          <li>سير عمل موحّد وقابل للتكرار</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+      <!-- FLOW -->
+      <section>
+        <h2 class="section-title">
+          <span class="dot"></span> كيف تعمل؟ خطوة بخطوة
+        </h2>
+        <div class="flow">
+          <div class="step">
+            <div class="num">1</div>
+            <h4>تطلب المهمة</h4>
+            <p>تكتب ما تريد إنجازه</p>
+          </div>
+          <div class="step">
+            <div class="num">2</div>
+            <h4>الذكاء يردّ</h4>
+            <p>بردّ مُنسّق بشكل ثابت</p>
+          </div>
+          <div class="step">
+            <div class="num">3</div>
+            <h4>الأداة تقرأ</h4>
+            <p>محلّل محلي يفكّك الرد</p>
+          </div>
+          <div class="step">
+            <div class="num">4</div>
+            <h4>التطبيق</h4>
+            <p>ملفات + تعديلات + أوامر</p>
+          </div>
+          <div class="step">
+            <div class="num">5</div>
+            <h4>التحقّق</h4>
+            <p>أو إعادة الرد إذا لزم</p>
+          </div>
+        </div>
+      </section>
 
-  <!-- FLOW -->
-  <section>
-    <h2 class="section-title"><span class="dot"></span> كيف تعمل؟ خطوة بخطوة</h2>
-    <div class="flow">
-      <div class="step"><div class="num">1</div><h4>تطلب المهمة</h4><p>تكتب ما تريد إنجازه</p></div>
-      <div class="step"><div class="num">2</div><h4>الذكاء يردّ</h4><p>بردّ مُنسّق بشكل ثابت</p></div>
-      <div class="step"><div class="num">3</div><h4>الأداة تقرأ</h4><p>محلّل محلي يفكّك الرد</p></div>
-      <div class="step"><div class="num">4</div><h4>التطبيق</h4><p>ملفات + تعديلات + أوامر</p></div>
-      <div class="step"><div class="num">5</div><h4>التحقّق</h4><p>أو إعادة الرد إذا لزم</p></div>
-    </div>
-  </section>
+      <!-- SHAPES -->
+      <section>
+        <h2 class="section-title">
+          <span class="dot"></span> الأشكال الثلاثة للردود
+        </h2>
+        <div class="shape-grid">
+          <div class="shape s-0">
+            <div class="tag">SHAPE 0</div>
+            <h4>ردّ فـارغ</h4>
+            <p>
+              كلمتان فقط: <code>ok</code>. تُستخدم في بداية محادثة بلا مهمة، أو
+              للتنبيه على تسمية الجلسة.
+            </p>
+          </div>
 
-  <!-- SHAPES -->
-  <section>
-    <h2 class="section-title"><span class="dot"></span> الأشكال الثلاثة للردود</h2>
-    <div class="shape-grid">
+          <div class="shape s-a">
+            <div class="tag">SHAPE A</div>
+            <h4>عمل جديد أو إجابة</h4>
+            <p>
+              ملف كامل بـ <code>### FILE:</code> أو تعديل بـ
+              <code>### EDIT:</code> أو أوامر جاهزة للتنفيذ، مع عنوان وملاحظات
+              موجزة.
+            </p>
+          </div>
 
-      <div class="shape s-0">
-        <div class="tag">SHAPE 0</div>
-        <h4>ردّ فـارغ</h4>
-        <p>كلمتان فقط: <code>ok</code>. تُستخدم في بداية محادثة بلا مهمة، أو للتنبيه على تسمية الجلسة.</p>
-      </div>
+          <div class="shape s-b">
+            <div class="tag">SHAPE B</div>
+            <h4>طلب معلومات أولًا</h4>
+            <p>
+              عندما لا يُعرف محتوى ملف — يطلب <code>cat</code> أو
+              <code>ls</code> فقط، ولا يقترح أي تعديل حتى يرى الناتج.
+            </p>
+          </div>
+        </div>
+      </section>
 
-      <div class="shape s-a">
-        <div class="tag">SHAPE A</div>
-        <h4>عمل جديد أو إجابة</h4>
-        <p>ملف كامل بـ <code>### FILE:</code> أو تعديل بـ <code>### EDIT:</code> أو أوامر جاهزة للتنفيذ، مع عنوان وملاحظات موجزة.</p>
-      </div>
+      <!-- CONCEPTS -->
+      <section>
+        <h2 class="section-title">
+          <span class="dot"></span> المفاهيم الأساسية
+        </h2>
+        <div class="concepts">
+          <div class="concept">
+            <h4><code>### FILE:</code> ملف جديد</h4>
+            <p>
+              محتوى ملف كامل بمسار نسبي من جذر المشروع. يُنشئ الملف من الصفر.
+            </p>
+          </div>
 
-      <div class="shape s-b">
-        <div class="tag">SHAPE B</div>
-        <h4>طلب معلومات أولًا</h4>
-        <p>عندما لا يُعرف محتوى ملف — يطلب <code>cat</code> أو <code>ls</code> فقط، ولا يقترح أي تعديل حتى يرى الناتج.</p>
-      </div>
+          <div class="concept">
+            <h4><code>### EDIT:</code> تعديل جزئي</h4>
+            <p>
+              زوج واحد <em>FIND / REPLACE</em> فقط. يتطلب رؤية الملف سابقًا
+              كاملًا عبر <code>cat</code>.
+            </p>
+          </div>
 
-    </div>
-  </section>
+          <div class="concept">
+            <h4><code>### DELETE:</code> حذف ملف</h4>
+            <p>حذف ملف مفرد فقط — لا مجلدات، ولا ملفات نظام أو أسرار.</p>
+          </div>
 
-  <!-- CONCEPTS -->
-  <section>
-    <h2 class="section-title"><span class="dot"></span> المفاهيم الأساسية</h2>
-    <div class="concepts">
+          <div class="concept">
+            <h4><code>## commands</code> أوامر</h4>
+            <p>
+              سطر واحد لكل أمر، بأعلام غير تفاعلية. تُنفّذ من الجذر أو بعد
+              <code>cd</code>.
+            </p>
+          </div>
 
-      <div class="concept">
-        <h4><code>### FILE:</code> ملف جديد</h4>
-        <p>محتوى ملف كامل بمسار نسبي من جذر المشروع. يُنشئ الملف من الصفر.</p>
-      </div>
+          <div class="concept">
+            <h4><code>@output</code> إعادة تغذية</h4>
+            <p>
+              عندما تحتاج الأداة ناتج أمر قبل الاستمرار. تُكتب في سطر مستقل
+              وتُقرأ لاحقًا.
+            </p>
+          </div>
 
-      <div class="concept">
-        <h4><code>### EDIT:</code> تعديل جزئي</h4>
-        <p>زوج واحد <em>FIND / REPLACE</em> فقط. يتطلب رؤية الملف سابقًا كاملًا عبر <code>cat</code>.</p>
-      </div>
+          <div class="concept">
+            <h4>ملفات السياق</h4>
+            <p>
+              <code>AGENTS.md</code> و<code>DESIGN.md</code> في الجذر — تُقرأ
+              أولًا وتُلزِم كل القرارات اللاحقة.
+            </p>
+          </div>
+        </div>
+      </section>
 
-      <div class="concept">
-        <h4><code>### DELETE:</code> حذف ملف</h4>
-        <p>حذف ملف مفرد فقط — لا مجلدات، ولا ملفات نظام أو أسرار.</p>
-      </div>
-
-      <div class="concept">
-        <h4><code>## commands</code> أوامر</h4>
-        <p>سطر واحد لكل أمر، بأعلام غير تفاعلية. تُنفّذ من الجذر أو بعد <code>cd</code>.</p>
-      </div>
-
-      <div class="concept">
-        <h4><code>@output</code> إعادة تغذية</h4>
-        <p>عندما تحتاج الأداة ناتج أمر قبل الاستمرار. تُكتب في سطر مستقل وتُقرأ لاحقًا.</p>
-      </div>
-
-      <div class="concept">
-        <h4>ملفات السياق</h4>
-        <p><code>AGENTS.md</code> و<code>DESIGN.md</code> في الجذر — تُقرأ أولًا وتُلزِم كل القرارات اللاحقة.</p>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- EXAMPLE -->
-  <section>
-    <h2 class="section-title"><span class="dot"></span> مثال عملي مصغّر</h2>
-    <div class="card">
-      <p class="muted">مسار العمل المعتاد لإنشاء مكوّن جديد في مشروع Next.js:</p>
-<pre><span class="cm"># 1) الأداة تطلب رؤية ما هو موجود</span>
+      <!-- EXAMPLE -->
+      <section>
+        <h2 class="section-title"><span class="dot"></span> مثال عملي مصغّر</h2>
+        <div class="card">
+          <p class="muted">
+            مسار العمل المعتاد لإنشاء مكوّن جديد في مشروع Next.js:
+          </p>
+          <pre><span class="cm"># 1) الأداة تطلب رؤية ما هو موجود</span>
 ls
 cat package.json
 
@@ -387,159 +593,351 @@ npm install lucide-react --save
 
 <span class="cm"># 3) الأداة تُنفّذ: تُنشئ الملف، تُثبّت الحزمة</span>
 <span class="cm"># 4) تراجع النتيجة، وتُكمل إن احتاجت</span></pre>
+        </div>
+      </section>
+
+      <!-- SAFETY -->
+      <section>
+        <h2 class="section-title"><span class="dot"></span> قواعد الأمان</h2>
+        <div class="card">
+          <ul class="safety">
+            <li>
+              <div class="ico">✓</div>
+              <div class="txt">
+                <strong>مسارات نسبية فقط</strong>
+                <span
+                  >لا مسارات مطلقة، ولا <code>..</code> خارج جذر المشروع.</span
+                >
+              </div>
+            </li>
+            <li>
+              <div class="ico">✓</div>
+              <div class="txt">
+                <strong>لا أوامر مدمّرة</strong>
+                <span
+                  >منع <code>rm -rf</code>، <code>shutdown</code>، وكل أمر
+                  تدميري.</span
+                >
+              </div>
+            </li>
+            <li>
+              <div class="ico">✓</div>
+              <div class="txt">
+                <strong>لا خوادم تطوير</strong>
+                <span
+                  ><code>npm run dev</code> و<code>next dev</code> و<code
+                    >vite</code
+                  >
+                  لا تُقترح تلقائيًا.</span
+                >
+              </div>
+            </li>
+            <li>
+              <div class="ico">✓</div>
+              <div class="txt">
+                <strong>لا تعديل بدون رؤية</strong>
+                <span
+                  >لا <code>### EDIT:</code> على ملف لم يُقرأ كاملًا عبر
+                  <code>cat</code> في نفس الجلسة.</span
+                >
+              </div>
+            </li>
+            <li>
+              <div class="ico">✓</div>
+              <div class="txt">
+                <strong>احترام ملفات السياق</strong>
+                <span
+                  >قراءة <code>AGENTS.md</code> / <code>DESIGN.md</code> قبل أي
+                  قرار تصميمي.</span
+                >
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <footer>
+        <p class="footer-tag">
+          صفحة شرح محلية لمشروع <strong>AI-A1</strong> — لا تُرسل أي بيانات لأي
+          جهة.
+        </p>
+
+        <h3 class="social-heading">تابعنا على</h3>
+
+        <div class="social-grid">
+          <a
+            href="https://www.facebook.com"
+            class="social-btn facebook"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Facebook"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="36"
+              height="36"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12z"
+              />
+            </svg>
+            <span>Facebook</span>
+          </a>
+
+          <a
+            href="https://x.com"
+            class="social-btn x"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="X (Twitter)"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="36"
+              height="36"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
+              />
+            </svg>
+            <span>X / Twitter</span>
+          </a>
+
+          <a
+            href="https://www.instagram.com"
+            class="social-btn instagram"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="36"
+              height="36"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+              />
+            </svg>
+            <span>Instagram</span>
+          </a>
+
+          <a
+            href="https://www.linkedin.com"
+            class="social-btn linkedin"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="LinkedIn"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="36"
+              height="36"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+              />
+            </svg>
+            <span>LinkedIn</span>
+          </a>
+
+          <a
+            href="https://www.youtube.com"
+            class="social-btn youtube"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="36"
+              height="36"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+              />
+            </svg>
+            <span>YouTube</span>
+          </a>
+
+          <a
+            href="https://github.com"
+            class="social-btn github"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="36"
+              height="36"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+              />
+            </svg>
+            <span>GitHub</span>
+          </a>
+
+          <a
+            href="https://www.tiktok.com"
+            class="social-btn tiktok"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="TikTok"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="36"
+              height="36"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"
+              />
+            </svg>
+            <span>TikTok</span>
+          </a>
+
+          <a
+            href="https://wa.me"
+            class="social-btn whatsapp"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="WhatsApp"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="36"
+              height="36"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"
+              />
+            </svg>
+            <span>WhatsApp</span>
+          </a>
+        </div>
+
+        <p class="muted footer-file">الملف: <code>.aia1/about.html</code></p>
+
+        <style>
+          footer {
+            margin-top: 64px !important;
+            padding-top: 44px !important;
+          }
+          footer .footer-tag {
+            font-size: 14px;
+            margin-bottom: 30px;
+          }
+          footer .social-heading {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 26px;
+            letter-spacing: 0.3px;
+          }
+          .social-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            max-width: 760px;
+            margin: 0 auto 32px;
+          }
+          .social-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 26px 12px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 600;
+            transition:
+              transform 0.3s ease,
+              background 0.3s ease,
+              color 0.3s ease,
+              border-color 0.3s ease,
+              box-shadow 0.3s ease;
+          }
+          .social-btn svg {
+            transition: transform 0.3s ease;
+          }
+          .social-btn:hover {
+            transform: translateY(-6px);
+            border-color: transparent;
+            color: #fff;
+            box-shadow: 0 14px 32px -10px rgba(0, 0, 0, 0.7);
+          }
+          .social-btn:hover svg {
+            transform: scale(1.15);
+          }
+          .social-btn.facebook:hover {
+            background: linear-gradient(135deg, #1877f2, #0e5bd4);
+          }
+          .social-btn.x:hover {
+            background: linear-gradient(135deg, #2a2a2a, #000);
+          }
+          .social-btn.instagram:hover {
+            background: linear-gradient(
+              135deg,
+              #f09433,
+              #e6683c,
+              #dc2743,
+              #cc2366,
+              #bc1888
+            );
+          }
+          .social-btn.linkedin:hover {
+            background: linear-gradient(135deg, #0a66c2, #004182);
+          }
+          .social-btn.youtube:hover {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+          }
+          .social-btn.github:hover {
+            background: linear-gradient(135deg, #444, #0d1117);
+          }
+          .social-btn.tiktok:hover {
+            background: linear-gradient(135deg, #25f4ee, #000 50%, #fe2c55);
+          }
+          .social-btn.whatsapp:hover {
+            background: linear-gradient(135deg, #25d366, #128c7e);
+          }
+          footer .footer-file {
+            margin-top: 20px;
+            font-size: 12px;
+          }
+          @media (max-width: 720px) {
+            .social-grid {
+              grid-template-columns: repeat(2, 1fr);
+              gap: 12px;
+            }
+            .social-btn {
+              padding: 20px 10px;
+            }
+          }
+        </style>
+      </footer>
     </div>
-  </section>
-
-  <!-- SAFETY -->
-  <section>
-    <h2 class="section-title"><span class="dot"></span> قواعد الأمان</h2>
-    <div class="card">
-      <ul class="safety">
-        <li>
-          <div class="ico">✓</div>
-          <div class="txt">
-            <strong>مسارات نسبية فقط</strong>
-            <span>لا مسارات مطلقة، ولا <code>..</code> خارج جذر المشروع.</span>
-          </div>
-        </li>
-        <li>
-          <div class="ico">✓</div>
-          <div class="txt">
-            <strong>لا أوامر مدمّرة</strong>
-            <span>منع <code>rm -rf</code>، <code>shutdown</code>، وكل أمر تدميري.</span>
-          </div>
-        </li>
-        <li>
-          <div class="ico">✓</div>
-          <div class="txt">
-            <strong>لا خوادم تطوير</strong>
-            <span><code>npm run dev</code> و<code>next dev</code> و<code>vite</code> لا تُقترح تلقائيًا.</span>
-          </div>
-        </li>
-        <li>
-          <div class="ico">✓</div>
-          <div class="txt">
-            <strong>لا تعديل بدون رؤية</strong>
-            <span>لا <code>### EDIT:</code> على ملف لم يُقرأ كاملًا عبر <code>cat</code> في نفس الجلسة.</span>
-          </div>
-        </li>
-        <li>
-          <div class="ico">✓</div>
-          <div class="txt">
-            <strong>احترام ملفات السياق</strong>
-            <span>قراءة <code>AGENTS.md</code> / <code>DESIGN.md</code> قبل أي قرار تصميمي.</span>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </section>
-
-  <footer>
-    <p class="footer-tag">صفحة شرح محلية لمشروع <strong>AI-A1</strong> — لا تُرسل أي بيانات لأي جهة.</p>
-
-    <h3 class="social-heading">تابعنا على</h3>
-
-    <div class="social-grid">
-      <a href="https://www.facebook.com" class="social-btn facebook" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-        <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" aria-hidden="true"><path d="M22 12c0-5.5-4.5-10-10-10S2 6.5 2 12c0 5 3.7 9.1 8.4 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7C18.3 21.1 22 17 22 12z"/></svg>
-        <span>Facebook</span>
-      </a>
-
-      <a href="https://x.com" class="social-btn x" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
-        <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-        <span>X / Twitter</span>
-      </a>
-
-      <a href="https://www.instagram.com" class="social-btn instagram" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-        <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-        <span>Instagram</span>
-      </a>
-
-      <a href="https://www.linkedin.com" class="social-btn linkedin" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-        <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-        <span>LinkedIn</span>
-      </a>
-
-      <a href="https://www.youtube.com" class="social-btn youtube" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-        <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        <span>YouTube</span>
-      </a>
-
-      <a href="https://github.com" class="social-btn github" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-        <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" aria-hidden="true"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
-        <span>GitHub</span>
-      </a>
-
-      <a href="https://www.tiktok.com" class="social-btn tiktok" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-        <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-        <span>TikTok</span>
-      </a>
-
-      <a href="https://wa.me" class="social-btn whatsapp" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
-        <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-        <span>WhatsApp</span>
-      </a>
-    </div>
-
-    <p class="muted footer-file">الملف: <code>.aia1/about.html</code></p>
-
-    <style>
-      footer { margin-top: 64px !important; padding-top: 44px !important; }
-      footer .footer-tag { font-size: 14px; margin-bottom: 30px; }
-      footer .social-heading {
-        font-size: 20px;
-        font-weight: 700;
-        color: var(--text);
-        margin-bottom: 26px;
-        letter-spacing: .3px;
-      }
-      .social-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 16px;
-        max-width: 760px;
-        margin: 0 auto 32px;
-      }
-      .social-btn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        padding: 26px 12px;
-        border-radius: 16px;
-        border: 1px solid var(--border);
-        background: var(--card);
-        color: var(--muted);
-        text-decoration: none;
-        font-size: 13.5px;
-        font-weight: 600;
-        transition: transform .3s ease, background .3s ease, color .3s ease, border-color .3s ease, box-shadow .3s ease;
-      }
-      .social-btn svg { transition: transform .3s ease; }
-      .social-btn:hover {
-        transform: translateY(-6px);
-        border-color: transparent;
-        color: #fff;
-        box-shadow: 0 14px 32px -10px rgba(0,0,0,.7);
-      }
-      .social-btn:hover svg { transform: scale(1.15); }
-      .social-btn.facebook:hover  { background: linear-gradient(135deg, #1877F2, #0e5bd4); }
-      .social-btn.x:hover         { background: linear-gradient(135deg, #2a2a2a, #000); }
-      .social-btn.instagram:hover { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
-      .social-btn.linkedin:hover  { background: linear-gradient(135deg, #0A66C2, #004182); }
-      .social-btn.youtube:hover   { background: linear-gradient(135deg, #FF0000, #cc0000); }
-      .social-btn.github:hover    { background: linear-gradient(135deg, #444, #0d1117); }
-      .social-btn.tiktok:hover    { background: linear-gradient(135deg, #25F4EE, #000 50%, #FE2C55); }
-      .social-btn.whatsapp:hover  { background: linear-gradient(135deg, #25D366, #128C7E); }
-      footer .footer-file { margin-top: 20px; font-size: 12px; }
-      @media (max-width: 720px) {
-        .social-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .social-btn { padding: 20px 10px; }
-      }
-    </style>
-  </footer>
-
-</div>
-</body>
+  </body>
 </html>

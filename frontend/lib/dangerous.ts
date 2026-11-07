@@ -72,7 +72,9 @@ function stripHeredocBodies(script: string): string {
 }
 
 export function isSensitiveCommand(line: string): boolean {
-  return /\b(cat|less|more|head|tail|grep|rg|cp|mv|rm|nano|vim|vi)\b[^\n|&;]*\.(env|env\.\w+|pem|key|p12|pfx|keystore|npmrc|pypirc|netrc|htpasswd|git-credentials)\b/i.test(line);
+  return /\b(cat|less|more|head|tail|grep|rg|cp|mv|rm|nano|vim|vi)\b[^\n|&;]*\.(env|env\.\w+|pem|key|p12|pfx|keystore|npmrc|pypirc|netrc|htpasswd|git-credentials)\b/i.test(
+    line,
+  );
 }
 
 export function scanDangerous(terminal: string): Danger[] {
