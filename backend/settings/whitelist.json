@@ -1,0 +1,19 @@
+{
+  "entries": [
+    "npm --version",
+    "node --version",
+    "python --version",
+    "pip --version",
+    "mkdir",
+    "printf",
+    "ls",
+    "pwd",
+    "cat",
+    "head",
+    "tail",
+    "grep",
+    "echo",
+    "ls -la find . -maxdepth 3 -not -path './node_modules/*' -not -path './.git/*' -not -path './.next/*' -type f echo -e \"----\\nAGENTS.md\" && cat AGENTS.md echo -e \"----\\nDESIGN.md\" && cat DESIGN.md echo -e \"----\\npackage.json\" && cat package.json",
+    "find"
+  ]
+}

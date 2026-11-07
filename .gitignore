@@ -1,0 +1,9 @@
+.pids/backend.log
+.pids/backend.log
+.pids/backend.log
+.pids/backend.pid
+.pids/frontend.pid
+.pids
+.pids/*
+/.pids
+/.pid/*

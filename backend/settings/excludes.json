@@ -1,0 +1,22 @@
+{
+  "patterns": [
+    "node_modules",
+    ".git",
+    ".next",
+    "dist",
+    "build",
+    "out",
+    "target",
+    ".venv",
+    "venv",
+    ".parcel-cache",
+    ".idea",
+    ".vscode",
+    ".turbo",
+    ".cache",
+    "__pycache__",
+    "log",
+    "logs",
+    "history"
+  ]
+}

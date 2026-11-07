@@ -1,0 +1,832 @@
+تمام، فهمت. **أحمر مش برتقالي**، شاشة واحدة بدون سكرول، Output هو النجم، والأزرار ثابتة فوق، و`Show more` لكل بلوك طويل.
+
+هعيد تصميم `/workspace` بالكامل + أضيف `ShowMore`. الـ`OutputCard`, `PlanCard`, `ProcessTable` القديمة مش هستخدمها (تسيبهم في الريبو عادي لو مستخدمين في مكان تاني).
+
+---
+
+## 1) `components/ShowMore.tsx` — جديد
+
+```tsx
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
+
+export function ShowMore({
+  children,
+  collapsedHeight = 220,
+  labelMore = "show more",
+  labelLess = "show less",
+}: {
+  children: React.ReactNode;
+  collapsedHeight?: number;
+  labelMore?: string;
+  labelLess?: string;
+}) {
+  const innerRef = useRef<HTMLDivElement>(null);
+  const [overflowing, setOverflowing] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    const el = innerRef.current;
+    if (!el) return;
+    const check = () => setOverflowing(el.scrollHeight > collapsedHeight + 8);
+    check();
+    const ro = new ResizeObserver(check);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [children, collapsedHeight]);
+
+  return (
+    <div>
+      <div
+        ref={innerRef}
+        className="relative overflow-hidden transition-[max-height] duration-300 ease-out"
+        style={{
+          maxHeight: open ? 4000 : overflowing ? collapsedHeight : "none",
+        }}
+      >
+        {children}
+
+        {!open && overflowing && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-10"
+            style={{
+              background:
+                "linear-gradient(to bottom, transparent, var(--void))",
+            }}
+          />
+        )}
+      </div>
+
+      {overflowing && (
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="mt-1.5 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.18em] text-(--secondary) hover:text-(--primary) transition-colors duration-200"
+        >
+          <ChevronDown
+            size={11}
+            className={
+              "transition-transform duration-200" + (open ? " rotate-180" : "")
+            }
+          />
+          {open ? labelLess : labelMore}
+        </button>
+      )}
+    </div>
+  );
+}
+```
+
+---
+
+## 2) `app/workspace/page.tsx` — إعادة تصميم كاملة
+
+```tsx
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+  BadgePlus,
+  Ban,
+  Eraser,
+  FileCode2,
+  Layers,
+  Play,
+  ShieldAlert,
+} from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
+import { CopyButton } from "@/components/CopyButton";
+import { ShowMore } from "@/components/ShowMore";
+import { DangerModal } from "@/components/DangerModal";
+import { parseAiResponse, buildScript } from "@/lib/parseResponse";
+import {
+  killProcess,
+  listProcesses,
+  openLogSocket,
+  runTask,
+  sendInputToSocket,
+  stripAnsi,
+} from "@/lib/api";
+import { scanDangerous, type Danger } from "@/lib/dangerous";
+import { setFavicon } from "@/lib/favicon";
+import type {
+  ParsedFile,
+  ParsedResponse,
+  ProcessInfo,
+} from "@/lib/types";
+
+export default function WorkspacePage() {
+  const router = useRouter();
+
+  const [parsed, setParsed] = useState<ParsedResponse | null>(null);
+  const [parseError, setParseError] = useState<string | null>(null);
+  const [cwd, setCwd] = useState<string>("");
+
+  const [pid, setPid] = useState<string | null>(null);
+  const [status, setStatus] = useState<string>("idle");
+  const [progress, setProgress] = useState(0);
+  const [log, setLog] = useState("");
+  const [dangers, setDangers] = useState<Danger[]>([]);
+  const [showDanger, setShowDanger] = useState(false);
+  const [tableKey, setTableKey] = useState(0);
+  const [outputFlash, setOutputFlash] = useState(false);
+
+  const socketRef = useRef<WebSocket | null>(null);
+  const outputRef = useRef<HTMLDivElement>(null);
+
+  /* ── load + parse ─────────────────────────────── */
+  useEffect(() => {
+    const raw = sessionStorage.getItem("ao-response-text") ?? "";
+    const dir = sessionStorage.getItem("ao-task-cwd") ?? "";
+    setCwd(dir);
+
+    const result = parseAiResponse(raw);
+    if (result.ok) setParsed(result.data);
+    else setParseError(result.error);
+  }, []);
+
+  const script = useMemo(() => (parsed ? buildScript(parsed) : ""), [parsed]);
+
+  /* ── favicon ──────────────────────────────────── */
+  useEffect(() => {
+    if (status === "running") setFavicon("running");
+    else if (status === "done") setFavicon("done");
+    else if (status === "stopped") setFavicon("stopped");
+    else if (status === "failed" || status === "killed") setFavicon("failed");
+    else setFavicon("idle");
+  }, [status]);
+
+  /* ── focus on output when run starts ──────────── */
+  useEffect(() => {
+    if (status !== "running") return;
+    outputRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setOutputFlash(true);
+    const t = setTimeout(() => setOutputFlash(false), 1400);
+    return () => clearTimeout(t);
+  }, [status]);
+
+  const pendingDangers = useMemo(
+    () => (script ? scanDangerous(script) : []),
+    [script],
+  );
+
+  /* ── actions ──────────────────────────────────── */
+  async function actuallyRun() {
+    if (!parsed || !script) return;
+    try {
+      setStatus("pending");
+      const res = await runTask({
+        title: parsed.title ?? "Untitled",
+        terminal: script,
+        cwd,
+      });
+      setPid(res.id);
+      setProgress(0);
+      setLog("");
+      setTableKey((k) => k + 1);
+
+      const socket = openLogSocket(res.id, (msg) => {
+        if (msg.type === "snapshot") setLog(msg.log ?? "");
+        else if (msg.type === "output") setLog((prev) => prev + msg.line);
+        else if (msg.type === "status") {
+          setStatus(msg.status);
+          setTableKey((k) => k + 1);
+        } else if (msg.type === "progress") {
+          setProgress(msg.progress ?? 0);
+        }
+      });
+      socketRef.current = socket;
+    } catch (e) {
+      setLog((p) => p + `\n[client error] ${(e as Error).message}\n`);
+      setStatus("failed");
+    }
+  }
+
+  function handleAccept() {
+    if (pendingDangers.length) {
+      setDangers(pendingDangers);
+      setShowDanger(true);
+      return;
+    }
+    actuallyRun();
+  }
+
+  function handleNew() {
+    router.push("/run");
+  }
+
+  async function handleCancel() {
+    if (pid) {
+      try {
+        await killProcess(pid);
+      } catch {}
+    }
+    socketRef.current?.close();
+    setStatus("killed");
+    setTableKey((k) => k + 1);
+  }
+
+  function handleClear() {
+    setLog("");
+    setProgress(0);
+    setStatus("idle");
+    setPid(null);
+    socketRef.current?.close();
+    socketRef.current = null;
+  }
+
+  function sendInput(data: string) {
+    sendInputToSocket(socketRef.current, data);
+  }
+
+  const running = status === "running" || status === "pending";
+  const hasStarted = pid !== null;
+
+  /* ── parse error screen ───────────────────────── */
+  if (parseError) {
+    return (
+      <div className="h-[calc(100dvh-64px)] grid place-items-center px-6">
+        <div className="max-w-md text-center">
+          <p
+            className="font-mono text-[11px] uppercase tracking-[0.22em]"
+            style={{ color: "var(--ao-red)" }}
+          >
+            parse error
+          </p>
+          <p className="mt-3 text-[14px] leading-[1.6] text-(--primary)">
+            {parseError}
+          </p>
+          <button
+            className="btn btn-secondary mt-6"
+            onClick={() => router.push("/run")}
+          >
+            Back to input
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (!parsed) {
+    return (
+      <div className="h-[calc(100dvh-64px)] grid place-items-center">
+        <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-(--secondary)">
+          loading…
+        </span>
+      </div>
+    );
+  }
+
+  /* ── UI ───────────────────────────────────────── */
+  return (
+    <>
+      <div className="h-[calc(100dvh-64px)] flex flex-col bg-(--void) text-(--primary)">
+
+        {/* ══════════ STICKY HEADER ══════════ */}
+        <header
+          className="shrink-0 flex items-center justify-between gap-3 px-4 h-14"
+          style={{ borderBottom: "1px solid var(--frost)" }}
+        >
+          <div className="min-w-0 flex items-baseline gap-3">
+            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-(--secondary) shrink-0">
+              workspace
+            </span>
+            <span className="text-(--frost) shrink-0 hidden sm:inline">/</span>
+            <h1
+              className="font-display truncate text-(--primary)"
+              style={{
+                fontSize: "1.05rem",
+                lineHeight: 1.2,
+                fontWeight: 500,
+                letterSpacing: "-0.3px",
+              }}
+            >
+              {parsed.title ?? "Untitled task"}
+            </h1>
+            {cwd && (
+              <>
+                <span className="text-(--frost) shrink-0 hidden md:inline">/</span>
+                <span className="hidden md:inline font-mono text-[10px] text-(--secondary) truncate">
+                  {cwd}
+                </span>
+              </>
+            )}
+          </div>
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button type="button" className="btn btn-ghost" onClick={handleNew}>
+              <BadgePlus size={13} />
+              <span className="hidden sm:inline">New</span>
+            </button>
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={handleClear}
+              disabled={!log}
+            >
+              <Eraser size={13} />
+              <span className="hidden sm:inline">Clear</span>
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={handleCancel}
+              disabled={!hasStarted || !running}
+            >
+              <Ban size={13} />
+              <span className="hidden sm:inline">Cancel</span>
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleAccept}
+              disabled={running}
+            >
+              <Play size={13} />
+              {running ? "Running" : "Run"}
+            </button>
+          </div>
+        </header>
+
+        {/* ══════════ DANGER STRIP ══════════ */}
+        {pendingDangers.length > 0 && (
+          <div
+            className="shrink-0 flex items-center gap-2 px-4 h-8 text-[11px]"
+            style={{
+              background: "rgba(255,26,26,0.08)",
+              borderBottom: "1px solid var(--frost)",
+            }}
+          >
+            <ShieldAlert size={12} style={{ color: "var(--ao-red)" }} />
+            <span className="text-(--primary)">
+              {pendingDangers.length} dangerous pattern
+              {pendingDangers.length > 1 ? "s" : ""} detected — accepting will
+              prompt confirmation
+            </span>
+          </div>
+        )}
+
+        {/* ══════════ PROGRESS STRIP ══════════ */}
+        <div
+          className="shrink-0 flex items-center gap-3 px-4 h-8"
+          style={{ borderBottom: "1px solid var(--frost)" }}
+        >
+          <span
+            className="font-mono text-[10px] uppercase tracking-[0.2em] w-[68px] shrink-0"
+            style={{
+              color:
+                status === "running" || status === "pending"
+                  ? "var(--ao-red)"
+                  : "var(--secondary)",
+            }}
+          >
+            {status}
+          </span>
+
+          <div
+            className="flex-1 h-[2px] rounded-full overflow-hidden"
+            style={{ background: "rgba(255,255,255,0.06)" }}
+          >
+            <div
+              className="h-full transition-all duration-300 ease-out"
+              style={{ width: `${progress}%`, background: "var(--ao-red)" }}
+            />
+          </div>
+
+          <span className="font-mono text-[10px] tabular-nums text-(--secondary) w-[36px] text-right shrink-0">
+            {progress}%
+          </span>
+        </div>
+
+        {/* ══════════ BODY GRID ══════════ */}
+        <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_340px]">
+
+          {/* ───── OUTPUT (main, left) ───── */}
+          <section
+            ref={outputRef}
+            className="min-h-0 flex flex-col transition-shadow duration-300"
+            style={{
+              borderRight: "1px solid var(--frost)",
+              boxShadow: outputFlash
+                ? "inset 0 0 0 1px rgba(255,26,26,0.55)"
+                : "none",
+            }}
+          >
+            <OutputPanel
+              log={log}
+              status={status}
+              onSendInput={sendInput}
+            />
+          </section>
+
+          {/* ───── SIDE RAIL (right) ───── */}
+          <aside className="min-h-0 overflow-y-auto">
+            {/* PLAN */}
+            {parsed.plan && (
+              <SidePanel title="Plan" copyText={parsed.plan}>
+                <ShowMore collapsedHeight={200}>
+                  <div className="md text-[13px] leading-[1.6]">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {parsed.plan}
+                    </ReactMarkdown>
+                  </div>
+                </ShowMore>
+              </SidePanel>
+            )}
+
+            {/* COMMANDS */}
+            {parsed.commands.trim() && (
+              <SidePanel title="Commands" copyText={parsed.commands}>
+                <ShowMore collapsedHeight={180}>
+                  <pre className="font-mono text-[11.5px] leading-[1.65] whitespace-pre-wrap wrap-break-word text-(--primary)">
+                    <code>{parsed.commands}</code>
+                  </pre>
+                </ShowMore>
+              </SidePanel>
+            )}
+
+            {/* FILES */}
+            {parsed.files.length > 0 && (
+              <SidePanel
+                title={
+                  <span className="flex items-center gap-2">
+                    <Layers size={11} style={{ color: "var(--ao-red)" }} />
+                    Files · {parsed.files.length}
+                  </span>
+                }
+              >
+                <div className="space-y-2">
+                  {parsed.files.map((f) => (
+                    <FileBlock key={f.path} file={f} />
+                  ))}
+                </div>
+              </SidePanel>
+            )}
+
+            {/* PROCESSES */}
+            <SidePanel
+              title={
+                <span className="flex items-center gap-2">
+                  <FileCode2 size={11} style={{ color: "var(--secondary)" }} />
+                  Processes
+                </span>
+              }
+            >
+              <ProcessList refreshKey={tableKey} />
+            </SidePanel>
+          </aside>
+        </div>
+      </div>
+
+      <DangerModal
+        open={showDanger}
+        dangers={dangers}
+        onCancel={() => setShowDanger(false)}
+        onContinue={() => {
+          setShowDanger(false);
+          actuallyRun();
+        }}
+      />
+    </>
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   OUTPUT PANEL — the star
+══════════════════════════════════════════════════ */
+
+function OutputPanel({
+  log,
+  status,
+  onSendInput,
+}: {
+  log: string;
+  status: string;
+  onSendInput?: (data: string) => void;
+}) {
+  const preRef = useRef<HTMLPreElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [input, setInput] = useState("");
+  const stickRef = useRef(true);
+
+  useEffect(() => {
+    const el = preRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      stickRef.current = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+    };
+    el.addEventListener("scroll", onScroll);
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const el = preRef.current;
+    if (!el) return;
+    if (stickRef.current) el.scrollTop = el.scrollHeight;
+  }, [log]);
+
+  const interactive = status === "running" || status === "pending";
+
+  function send(payload: string) {
+    onSendInput?.(payload);
+    stickRef.current = true;
+    inputRef.current?.focus();
+  }
+
+  const dot =
+    status === "running" || status === "pending"
+      ? "var(--ao-red)"
+      : status === "done"
+        ? "var(--a-green)"
+        : status === "failed" || status === "killed"
+          ? "var(--ao-red)"
+          : "var(--secondary)";
+
+  return (
+    <>
+      {/* header */}
+      <div
+        className="shrink-0 flex items-center justify-between gap-3 px-4 h-10"
+        style={{ borderBottom: "1px solid var(--frost)" }}
+      >
+        <div className="flex items-center gap-2 min-w-0">
+          <span
+            className="block w-1.5 h-1.5 rounded-full shrink-0"
+            style={{
+              background: dot,
+              animation: interactive
+                ? "pulseRed 1.6s ease-out infinite"
+                : undefined,
+            }}
+          />
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-(--primary)">
+            Output
+          </span>
+          {interactive && (
+            <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-(--secondary)">
+              · interactive
+            </span>
+          )}
+        </div>
+        <CopyButton text={log} label="copy" />
+      </div>
+
+      {/* body */}
+      <div className="flex-1 min-h-0 relative">
+        <pre
+          ref={preRef}
+          className="absolute inset-0 overflow-auto px-4 py-3 font-mono text-[12px] leading-[1.7] text-(--primary) whitespace-pre-wrap wrap-break-word"
+        >
+          <code>
+            {stripAnsi(log) || (
+              <span className="text-(--secondary)">
+                — waiting for output —
+              </span>
+            )}
+          </code>
+        </pre>
+      </div>
+
+      {/* interactive input */}
+      {interactive && onSendInput && (
+        <div
+          className="shrink-0 px-3 py-2 space-y-1.5"
+          style={{ borderTop: "1px solid var(--frost)" }}
+        >
+          <div className="flex items-center gap-1.5">
+            <input
+              ref={inputRef}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  send(input + "\n");
+                  setInput("");
+                }
+              }}
+              placeholder="send to process…"
+              autoComplete="off"
+              spellCheck={false}
+              className="min-w-0 flex-1 bg-transparent px-2.5 h-8 font-mono text-[12px] text-(--primary) placeholder:text-(--secondary) outline-none transition-colors duration-200"
+              style={{ borderRadius: 6, border: "1px solid var(--frost)" }}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                send(input + "\n");
+                setInput("");
+              }}
+              className="shrink-0 inline-flex items-center gap-1 h-8 px-3 font-mono text-[10px] uppercase tracking-[0.14em] text-(--primary) hover:text-(--ao-red) transition-colors duration-200"
+              style={{ borderRadius: 6, border: "1px solid var(--frost)" }}
+            >
+              Send
+            </button>
+          </div>
+
+          <div className="flex flex-wrap gap-1">
+            {(
+              [
+                ["↑", "\x1b[A"],
+                ["↓", "\x1b[B"],
+                ["↵", "\r"],
+                ["^C", "\x03"],
+              ] as const
+            ).map(([label, seq]) => (
+              <button
+                key={label}
+                type="button"
+                onClick={() => send(seq)}
+                className="font-mono text-[10px] px-2 h-6 text-(--secondary) hover:text-(--primary) transition-colors duration-200"
+                style={{ borderRadius: 4, border: "1px solid var(--frost)" }}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   SIDE PANEL — right rail section
+══════════════════════════════════════════════════ */
+
+function SidePanel({
+  title,
+  copyText,
+  children,
+}: {
+  title: React.ReactNode;
+  copyText?: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <section
+      className="px-4 py-3.5"
+      style={{ borderBottom: "1px solid var(--frost)" }}
+    >
+      <header className="flex items-center justify-between gap-2 mb-2.5">
+        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-(--primary)">
+          {title}
+        </span>
+        {copyText && <CopyButton text={copyText} label="" />}
+      </header>
+      {children}
+    </section>
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   FILE BLOCK — compact, collapsible
+══════════════════════════════════════════════════ */
+
+function FileBlock({ file }: { file: ParsedFile }) {
+  const [open, setOpen] = useState(false);
+  const lines = useMemo(() => file.content.split("\n").length, [file.content]);
+
+  return (
+    <div
+      className="overflow-hidden"
+      style={{ borderRadius: 8, border: "1px solid var(--frost)" }}
+    >
+      <div className="flex items-center gap-2 px-2.5 h-9">
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          className="min-w-0 flex-1 flex items-center gap-2 text-left"
+        >
+          <span
+            className="font-mono text-[10px] transition-transform duration-200 shrink-0"
+            style={{
+              color: "var(--secondary)",
+              transform: open ? "rotate(90deg)" : "none",
+              display: "inline-block",
+            }}
+          >
+            ▸
+          </span>
+          <span className="font-mono text-[11px] text-(--primary) truncate">
+            {file.path}
+          </span>
+          <span className="ml-auto shrink-0 font-mono text-[9px] text-(--secondary)">
+            {lines} L
+          </span>
+        </button>
+        <CopyButton text={file.content} label="" />
+      </div>
+
+      {open && (
+        <pre
+          className="max-h-[280px] overflow-auto px-3 py-2 font-mono text-[11px] leading-[1.65] whitespace-pre text-(--primary)"
+          style={{ borderTop: "1px solid var(--frost)" }}
+        >
+          <code>{file.content}</code>
+        </pre>
+      )}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════════════════
+   PROCESS LIST — compact rows
+══════════════════════════════════════════════════ */
+
+function ProcessList({ refreshKey = 0 }: { refreshKey?: number }) {
+  const [rows, setRows] = useState<ProcessInfo[]>([]);
+
+  useEffect(() => {
+    let alive = true;
+    const tick = async () => {
+      try {
+        const data = await listProcesses();
+        if (alive) setRows(data);
+      } catch {}
+    };
+    tick();
+    const id = setInterval(tick, 3000);
+    return () => {
+      alive = false;
+      clearInterval(id);
+    };
+  }, [refreshKey]);
+
+  if (rows.length === 0) {
+    return (
+      <p className="font-mono text-[10px] text-(--secondary)">
+        no processes yet
+      </p>
+    );
+  }
+
+  return (
+    <ul className="space-y-1">
+      {rows.slice(0, 8).map((r) => {
+        const tone =
+          r.status === "running"
+            ? "var(--ao-red)"
+            : r.status === "done"
+              ? "var(--a-green)"
+              : r.status === "failed"
+                ? "var(--ao-red)"
+                : "var(--secondary)";
+        return (
+          <li
+            key={r.id}
+            className="flex items-center gap-2 font-mono text-[10px] py-1"
+          >
+            <span
+              className="block w-1.5 h-1.5 rounded-full shrink-0"
+              style={{ background: tone }}
+            />
+            <span className="text-(--secondary) shrink-0">
+              {r.id.slice(0, 6)}
+            </span>
+            <span className="truncate text-(--primary) flex-1">
+              {r.title}
+            </span>
+            <span className="tabular-nums shrink-0" style={{ color: tone }}>
+              {r.progress}%
+            </span>
+          </li>
+        );
+      })}
+      {rows.length > 8 && (
+        <li className="font-mono text-[10px] text-(--secondary) pt-1">
+          +{rows.length - 8} more…
+        </li>
+      )}
+    </ul>
+  );
+}
+```
+
+---
+
+## 3) الحاجات اللي اتعملت
+
+| # | الطلب | الحل |
+|---|---|---|
+| 1 | **حجم صغير، جنب بعضه** | grid عمودين: Output `flex-1` + side rail `340px` ثابتة، والـpadding قل لـ`10-14px` |
+| 2 | **الـOutput يتركز عليه بعد Run** | `useEffect` على status → `scrollIntoView` + flash ring أحمر 1.4s |
+| 3 | **الأزرار ثابتة** | كلهم في `header` بـ`shrink-0` جوه `flex-col` بارتفاع `calc(100dvh-64px)` — مش بيتحركوا |
+| 4 | **تصميم جديد + أحمر مش برتقالي** | كل الـaccent بقى `var(--ao-red) #ff1a1a`، استخدمت `--frost`, `--ring`, `--secondary` من tokens الـglobals.css عندك، ومفيش أي حاجة من التصميم القديم |
+| 5 | **Show more** | كومبوننت جديد بـ`ResizeObserver`، يستخدم `collapsedHeight` لكل سياق (200 للـplan، 180 للـcommands) + gradient fade |
+
+**تفاصيل:**
+- الشاشة كلها `h-[calc(100dvh-64px)]` — **مفيش سكرول للصفحة**.
+- الـside rail الوحيد اللي بيعمل scroll داخلي (`overflow-y-auto`).
+- الـOutput panel بيعمل scroll داخلي جوه الـ`<pre>` — وauto-stick على الآخر.
+- الـFiles كل واحد collapse مستقل (default مقفول — عشان الصفحة تفضل صغيرة).
+- الـProcesses بتعرض أول 8 بس، والباقي `+N more`.
+- الـ`pulseRed` keyframe موجود في globals.css بتاعك — استخدمته للـdot بتاع الـOutput وقت الـrunning.
+
+**حاجة واحدة:** لو `listProcesses` أو `stripAnsi` مش موجودين في `@/lib/api`، شيلهم من الـimport. الملف بيستوردهم من الـAPI الموجودة عندك فالمفروض تمام.

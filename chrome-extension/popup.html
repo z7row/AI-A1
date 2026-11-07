@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>AI-A1 Bridge</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header>
+        <img src="icon.png" id="ext-icon" class="ext-icon" alt="AI-A1" />
+        <h1>AI-A1 Bridge</h1>
+      </header>
+
+      <label class="row big" for="cb-enabled">
+        <span class="row-label">Enabled</span>
+        <input id="cb-enabled" type="checkbox" class="cb" />
+        <span class="switch" aria-hidden="true"></span>
+      </label>
+
+      <div class="section-label">AI sites</div>
+      <p class="hint">
+        Click a model to activate it — copying there will jump you to
+        <code>localhost:2000/run</code>.
+      </p>
+
+      <div class="ai-grid">
+        <button class="ai-btn" data-preset="chatgpt">ChatGPT</button>
+        <button class="ai-btn" data-preset="deepseek">DeepSeek</button>
+        <button class="ai-btn" data-preset="gemini">Gemini</button>
+      </div>
+
+      <div id="custom-sites" class="custom-list"></div>
+
+      <button id="add-current" class="btn-add" hidden>
+        + Add current site: <span id="current-host"></span>
+      </button>
+
+      <button id="toggle-url" class="btn-add">+ Add by URL</button>
+      <div id="url-wrap" class="url-wrap" hidden>
+        <input id="url-input" type="text" class="text-input" placeholder="grok.com" spellcheck="false" />
+        <button id="url-save" class="btn-small">Add</button>
+      </div>
+
+      <div class="section-label">Copy trigger</div>
+
+      <div id="picked-display" hidden>
+        <div class="picked-chip">
+          <span class="picked-label" id="picked-selector"></span>
+          <button class="chip-remove" id="picked-remove" title="Remove">×</button>
+        </div>
+        <button id="picked-edit" class="btn-add">Edit selector</button>
+        <div id="picked-edit-wrap" class="url-wrap" hidden>
+          <input id="picked-input" type="text" class="text-input" placeholder=".my-copy-button" spellcheck="false" />
+          <button id="picked-save" class="btn-small">Save</button>
+        </div>
+        <button id="picked-repick" class="btn-add">Re-pick on this page</button>
+      </div>
+
+      <button id="pick-btn" class="btn-add" hidden>
+        + Pick element on this page
+      </button>
+
+      <p class="hint" id="pick-hint" hidden>
+        Click the copy button you want to use, then press ESC to cancel.
+      </p>
+
+      <details class="more">
+        <summary>More settings</summary>
+
+        <div class="section-label">After switching</div>
+
+        <label class="row sub" for="cb-paste">
+          <span class="row-text">
+            <span class="row-title">Auto-paste</span>
+            <span class="row-sub">Fill the response box with the copied text</span>
+          </span>
+          <input id="cb-paste" type="checkbox" class="cb" />
+          <span class="switch small" aria-hidden="true"></span>
+        </label>
+
+        <label class="row sub" id="start-row" for="cb-start">
+          <span class="row-text">
+            <span class="row-title">Auto-start</span>
+            <span class="row-sub">Also press Start after pasting</span>
+          </span>
+          <input id="cb-start" type="checkbox" class="cb" />
+          <span class="switch small" aria-hidden="true"></span>
+        </label>
+
+        <div class="section-label">Send output back</div>
+
+        <label class="row sub" for="cb-autosend">
+          <span class="row-text">
+            <span class="row-title">Auto-send on finish</span>
+            <span class="row-sub">Paste terminal output into the last AI tab</span>
+          </span>
+          <input id="cb-autosend" type="checkbox" class="cb" />
+          <span class="switch small" aria-hidden="true"></span>
+        </label>
+
+        <label class="row sub" for="cb-autosend-enter">
+          <span class="row-text">
+            <span class="row-title">Auto-press Send</span>
+            <span class="row-sub">Click Send after pasting — stays on until you turn it off</span>
+          </span>
+          <input id="cb-autosend-enter" type="checkbox" class="cb" />
+          <span class="switch small" aria-hidden="true"></span>
+        </label>
+
+        <div class="section-label">AI page behaviour</div>
+
+        <label class="row sub" for="cb-autobottom">
+          <span class="row-text">
+            <span class="row-title">Always at bottom</span>
+            <span class="row-sub">Pin AI chat to the bottom</span>
+          </span>
+          <input id="cb-autobottom" type="checkbox" class="cb" />
+          <span class="switch small" aria-hidden="true"></span>
+        </label>
+
+        <div class="row-actions">
+          <button id="export-picks" class="btn-small">Export picks</button>
+          <button id="send-output" class="btn-small">Send output</button>
+        </div>
+      </details>
+
+      <details class="more">
+        <summary>Dev Tools (Tests)</summary>
+        
+        <div class="section-label">Testing actions</div>
+        
+        <button id="test-paste" class="test">Test: jump + paste</button>
+        <button id="test-paste-start" class="test">Test: jump + paste + start</button>
+      </details>
+
+      <p id="status" class="status"></p>
+
+      <footer>AI<span class="accent">·</span>A1</footer>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>

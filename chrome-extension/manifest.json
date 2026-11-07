@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "AI-A1 Bridge",
+  "version": "1.0.0",
+  "description": "Bridge between AI chats and AO-AI runner.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs",
+    "clipboardRead",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "http://localhost:2000/*"
+  ],
+  "optional_host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://localhost:2000/*"],
+      "js": ["app-bridge.js"]
+    }
+  ],
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}

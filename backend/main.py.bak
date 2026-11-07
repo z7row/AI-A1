@@ -1,0 +1,399 @@
+"""AO-AI backend — FastAPI process runner with live WebSocket logs + PTY stdin."""
+from __future__ import annotations
+
+import asyncio
+import fcntl
+import json
+import os
+import pty
+import select
+import struct
+import subprocess
+import termios
+import time
+import uuid
+from pathlib import Path
+from typing import Any
+
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
+APP_DIR = Path(__file__).parent
+LOG_DIR = APP_DIR / "logs"
+LOG_DIR.mkdir(exist_ok=True)
+
+# Kill a process if it produces no output and receives no input for this long.
+IDLE_TIMEOUT_SECONDS = 600
+
+app = FastAPI(title="AO-AI", version="1.1.0")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+PROCESSES: dict[str, dict[str, Any]] = {}
+SUBSCRIBERS: dict[str, list[WebSocket]] = {}
+
+
+# ---------------------------------------------------------------- models
+class RunRequest(BaseModel):
+    title: str = "Untitled task"
+    terminal: str
+    cwd: str | None = None
+
+
+class RunResponse(BaseModel):
+    id: str
+    status: str
+
+
+# ----------------------------------------------------------------- utils
+def _log_path(pid: str) -> Path:
+    return LOG_DIR / f"{pid}.log"
+
+
+def _script_path(pid: str) -> Path:
+    return LOG_DIR / f"{pid}.sh"
+
+
+def _append_log(pid: str, text: str) -> None:
+    with _log_path(pid).open("a", encoding="utf-8") as fh:
+        fh.write(text)
+
+
+def _public(p: dict[str, Any]) -> dict[str, Any]:
+    return {k: v for k, v in p.items() if not k.startswith("_")}
+
+
+def _count_tasks(terminal: str) -> int:
+    tasks, buf, in_heredoc = 0, [], False
+    for line in terminal.splitlines():
+        if in_heredoc:
+            buf.append(line)
+            if line.strip() == "EOF":
+                in_heredoc = False
+                tasks += 1
+                buf.clear()
+            continue
+        if "<<" in line and "EOF" in line:
+            in_heredoc = True
+            buf.append(line)
+            continue
+        if not line.strip():
+            if buf:
+                tasks += 1
+                buf.clear()
+            continue
+        buf.append(line)
+    if buf:
+        tasks += 1
+    return max(1, tasks)
+
+
+async def _broadcast(pid: str, message: dict[str, Any]) -> None:
+    for ws in list(SUBSCRIBERS.get(pid, [])):
+        try:
+            await ws.send_json(message)
+        except Exception:
+            try:
+                SUBSCRIBERS[pid].remove(ws)
+            except ValueError:
+                pass
+
+
+async def _progress_ticker(pid: str) -> None:
+    while PROCESSES.get(pid, {}).get("status") == "running":
+        p = PROCESSES[pid]
+        elapsed = time.time() - (p.get("started_at") or time.time())
+        p["progress"] = min(90, 10 + int(elapsed * 2))
+        await _broadcast(pid, {"type": "progress", "progress": p["progress"]})
+        await asyncio.sleep(1)
+
+
+# -------------------------------------------------------------- runner (PTY)
+async def _run_process(pid: str) -> None:
+    p = PROCESSES[pid]
+    p["status"] = "running"
+    p["started_at"] = time.time()
+    p["last_activity"] = time.time()
+    await _broadcast(pid, {"type": "status", "status": "running"})
+    asyncio.create_task(_progress_ticker(pid))
+
+    script = _script_path(pid)
+    script.write_text(p["terminal"], encoding="utf-8")
+    script.chmod(0o700)
+
+    env = os.environ.copy()
+    env["TERM"] = "xterm-256color"
+    env["PYTHONUNBUFFERED"] = "1"
+    env["NO_COLOR"] = ""          # allow color since PTY supports it
+    env.pop("CI", None)           # CI=1 would disable interactive prompts
+
+    # Allocate a real pseudo-terminal so commands see a TTY.
+    master_fd, slave_fd = pty.openpty()
+
+    # 30 rows x 120 cols
+    winsize = struct.pack("HHHH", 30, 120, 0, 0)
+    fcntl.ioctl(slave_fd, termios.TIOCSWINSZ, winsize)
+
+    try:
+        proc = subprocess.Popen(
+            ["bash", str(script)],
+            stdin=slave_fd,
+            stdout=slave_fd,
+            stderr=slave_fd,
+            cwd=p.get("cwd") or None,
+            env=env,
+            preexec_fn=os.setsid,
+            close_fds=True,
+        )
+    except Exception as exc:  # noqa: BLE001
+        os.close(master_fd)
+        os.close(slave_fd)
+        _append_log(pid, f"\n[backend error] {exc}\n")
+        await _broadcast(pid, {"type": "output", "line": f"\n[backend error] {exc}\n"})
+        p["status"] = "failed"
+        p["exit_code"] = -1
+        p["progress"] = 100
+        await _broadcast(pid, {"type": "status", "status": "failed", "exit_code": -1})
+        return
+
+    os.close(slave_fd)
+    p["_proc"] = proc
+    p["_master_fd"] = master_fd
+
+    loop = asyncio.get_running_loop()
+
+    def _read() -> bytes:
+        try:
+            r, _, _ = select.select([master_fd], [], [], 0.5)
+            if not r:
+                return b""
+            return os.read(master_fd, 4096)
+        except OSError:
+            return b""
+
+    try:
+        while True:
+            if p["status"] == "killed":
+                break
+
+            data = await loop.run_in_executor(None, _read)
+
+            if data:
+                p["last_activity"] = time.time()
+                text = data.decode("utf-8", errors="replace")
+                _append_log(pid, text)
+                await _broadcast(pid, {"type": "output", "line": text})
+            else:
+                if proc.poll() is not None:
+                    break
+                # No output — check idle timeout
+                idle_for = time.time() - p["last_activity"]
+                if idle_for > IDLE_TIMEOUT_SECONDS:
+                    proc.kill()
+                    msg = (
+                        f"\n[timeout] no activity for {IDLE_TIMEOUT_SECONDS}s — process killed\n"
+                    )
+                    _append_log(pid, msg)
+                    await _broadcast(pid, {"type": "output", "line": msg})
+                    break
+
+        proc.wait()
+        p["exit_code"] = proc.returncode
+        # Exit code 130 = terminated by SIGINT (Ctrl+C) — treat as a graceful stop.
+        # Exit code -15 = terminated by SIGTERM (our kill endpoint).
+        if proc.returncode == 0:
+            p["status"] = "done"
+        elif proc.returncode in (130, -15, 143):
+            p["status"] = "stopped"
+        else:
+            p["status"] = "failed"    except Exception as exc:  # noqa: BLE001
+        _append_log(pid, f"\n[backend error] {exc}\n")
+        await _broadcast(pid, {"type": "output", "line": f"\n[backend error] {exc}\n"})
+        p["status"] = "failed"
+        p["exit_code"] = -1
+    finally:
+        try:
+            os.close(master_fd)
+        except OSError:
+            pass
+        p["finished_at"] = time.time()
+        p["progress"] = 100
+        p["tasks_done"] = p["tasks_total"]
+        try:
+            script.unlink(missing_ok=True)
+        except OSError:
+            pass
+        await _broadcast(
+            pid,
+            {"type": "status", "status": p["status"], "exit_code": p.get("exit_code")},
+        )
+        await _broadcast(pid, {"type": "progress", "progress": 100})
+
+
+# --------------------------------------------------------------- routes
+@app.get("/")
+async def root() -> dict[str, Any]:
+    return {"ok": True, "service": "AO-AI", "version": "1.1.0", "time": time.time()}
+
+
+@app.post("/run", response_model=RunResponse)
+async def run(req: RunRequest) -> RunResponse:
+    if not req.cwd:
+        raise HTTPException(400, "Working directory is required.")
+    if not Path(req.cwd).is_dir():
+        raise HTTPException(400, f"Working directory does not exist: {req.cwd}")
+
+    pid = uuid.uuid4().hex[:12]
+    PROCESSES[pid] = {
+        "id": pid,
+        "title": req.title,
+        "terminal": req.terminal,
+        "cwd": req.cwd,
+        "status": "pending",
+        "progress": 0,
+        "started_at": None,
+        "finished_at": None,
+        "exit_code": None,
+        "log_path": str(_log_path(pid)),
+        "tasks_total": _count_tasks(req.terminal),
+        "tasks_done": 0,
+    }
+    _log_path(pid).write_text("", encoding="utf-8")
+    asyncio.create_task(_run_process(pid))
+    return RunResponse(id=pid, status="pending")
+
+
+@app.get("/processes")
+async def list_processes() -> list[dict[str, Any]]:
+    return [_public(p) for p in PROCESSES.values()]
+
+
+@app.get("/processes/{pid}")
+async def get_process(pid: str) -> dict[str, Any]:
+    p = PROCESSES.get(pid)
+    if not p:
+        raise HTTPException(404, "Process not found")
+    return _public(p)
+
+
+@app.get("/progress/{pid}")
+async def get_progress(pid: str) -> dict[str, Any]:
+    p = PROCESSES.get(pid)
+    if not p:
+        raise HTTPException(404, "Process not found")
+    return {
+        "id": pid,
+        "status": p["status"],
+        "progress": p["progress"],
+        "tasks_total": p["tasks_total"],
+        "tasks_done": p["tasks_done"],
+    }
+
+
+@app.get("/log/{pid}")
+async def get_log(pid: str) -> dict[str, str]:
+    if pid not in PROCESSES:
+        raise HTTPException(404, "Process not found")
+    path = _log_path(pid)
+    return {"id": pid, "log": path.read_text(encoding="utf-8") if path.exists() else ""}
+
+
+@app.post("/kill/{pid}")
+async def kill(pid: str) -> dict[str, Any]:
+    p = PROCESSES.get(pid)
+    if not p:
+        raise HTTPException(404, "Process not found")
+    p["status"] = "killed"
+    proc = p.get("_proc")
+    if proc and proc.poll() is None:
+        proc.terminate()
+        try:
+            proc.wait(timeout=3)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+    p["progress"] = 100
+    p["finished_at"] = time.time()
+    await _broadcast(pid, {"type": "status", "status": "killed"})
+    return {"ok": True, "id": pid, "status": "killed"}
+
+
+# ------------------------------------------------------------ folder picker
+@app.get("/browse")
+async def browse(path: str | None = None) -> dict[str, Any]:
+    home = Path.home()
+    target = Path(path).expanduser().resolve() if path else home
+    if not target.is_dir():
+        raise HTTPException(400, f"Not a directory: {target}")
+    try:
+        entries = sorted(
+            [e for e in target.iterdir() if e.is_dir() and not e.name.startswith(".")],
+            key=lambda e: e.name.lower(),
+        )
+    except PermissionError:
+        raise HTTPException(403, f"Permission denied: {target}")
+    return {
+        "path": str(target),
+        "parent": str(target.parent) if target != target.parent else None,
+        "home": str(home),
+        "dirs": [{"name": e.name, "path": str(e)} for e in entries],
+    }
+
+
+# --------------------------------------------------------------- WebSocket
+@app.websocket("/ws/{pid}")
+async def ws(websocket: WebSocket, pid: str) -> None:
+    await websocket.accept()
+    SUBSCRIBERS.setdefault(pid, []).append(websocket)
+
+    # Replay what we have so far.
+    path = _log_path(pid)
+    if path.exists():
+        await websocket.send_json({"type": "snapshot", "log": path.read_text(encoding="utf-8")})
+
+    try:
+        while True:
+            msg = await websocket.receive_text()
+            try:
+                data = json.loads(msg)
+            except json.JSONDecodeError:
+                continue
+
+            kind = data.get("type")
+            p = PROCESSES.get(pid)
+
+            if kind == "input" and p:
+                fd = p.get("_master_fd")
+                if fd is not None:
+                    try:
+                        os.write(fd, data.get("data", "").encode("utf-8"))
+                        p["last_activity"] = time.time()   # reset idle timer
+                    except OSError:
+                        pass
+
+            elif kind == "resize" and p:
+                fd = p.get("_master_fd")
+                rows = int(data.get("rows") or 30)
+                cols = int(data.get("cols") or 120)
+                if fd is not None:
+                    try:
+                        fcntl.ioctl(
+                            fd,
+                            termios.TIOCSWINSZ,
+                            struct.pack("HHHH", rows, cols, 0, 0),
+                        )
+                    except OSError:
+                        pass
+
+    except WebSocketDisconnect:
+        pass
+    finally:
+        try:
+            SUBSCRIBERS.get(pid, []).remove(websocket)
+        except ValueError:
+            pass
